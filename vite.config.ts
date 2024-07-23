@@ -67,7 +67,10 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       https: false,
       port: VITE_PORT,
       // Load proxy configuration from .env
-      proxy: createProxy(VITE_PROXY),
+      proxy: {
+        ...createProxy(VITE_PROXY),
+        '/jeecg-boot': 'http://192.168.20.58:8080',
+      },
     },
     build: {
       minify: 'esbuild',
@@ -84,10 +87,10 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
           manualChunks: {
             // vue vue-router合并打包
             'vue-vendor': ['vue', 'vue-router'],
-            'antd-vue-vendor': ['ant-design-vue','@ant-design/icons-vue','@ant-design/colors'],
-            'vxe-table-vendor': ['vxe-table','vxe-table-plugin-antd','xe-utils'],
+            'antd-vue-vendor': ['ant-design-vue', '@ant-design/icons-vue', '@ant-design/colors'],
+            'vxe-table-vendor': ['vxe-table', 'vxe-table-plugin-antd', 'xe-utils'],
             'emoji-mart-vue-fast': ['emoji-mart-vue-fast'],
-            'china-area-data-vendor': ['china-area-data']
+            'china-area-data-vendor': ['china-area-data'],
           },
         },
       },
