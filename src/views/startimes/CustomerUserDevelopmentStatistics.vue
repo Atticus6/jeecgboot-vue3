@@ -1,12 +1,24 @@
 <template>
-  <BasicTable :columns="columns" :data-source="data" :pagination="false" :loading="loading" :bordered="true" :canResize="true">
+  <BasicTable :columns="columns" :data-source="data" :loading="loading" :pagination="false" :bordered="true" :canResize="true">
     <template v-if="inputItems.length !== 0" #headerTop>
       <BasicForm :schemas="schemas" :labelWidth="70" @submit="handleSearch" :showResetButton="false" />
     </template>
     <template #toolbar>
-      <div>333</div>
+      <div></div>
     </template>
   </BasicTable>
+
+  <div class="pag">
+    <Pagination
+      :current="state.pageNo"
+      :total="state.count"
+      :page-size="state.pageSize"
+      how-quick-jumper
+      show-size-changer
+      :show-total="(total) => `共 ${total} 条数据`"
+      @change="paginationChange"
+  /></div>
+
   <a-row>
     <a-col :span="12">
       <Bar :chart-data="line1" height="40vh" :option="{ title: { text: '客户发展数', left: 'center' } }" />
@@ -28,22 +40,33 @@
 
 <script setup lang="ts">
   import { computed, onMounted, ref } from 'vue';
-  import { show, getColumnsByReportId, getFormItems, InputItem, BasicColumn, InputMode } from './modules.data';
+  import { show, getColumnsByReportId, getFormItems, InputItem, BasicColumn, InputMode, excludeIndex } from './modules.data';
   import { BasicTable } from '/@/components/Table';
   import Bar from '/@/components/chart/Bar.vue';
   import Pie from '/@/components/chart/Pie.vue';
-  import { BasicForm, FormSchema, ApiSelect, JAreaLinkage } from '/@/components/Form/index';
+  import { BasicForm, FormSchema } from '/@/components/Form/index';
+  import { Pagination } from 'ant-design-vue';
 
   // import FormItem from './components/FormItem.vue';
-  interface Item {
-    operareanamestr: string;
-    jimu_row_id: string;
-    subscriber_count: string;
-    pagehelper_row_id: string;
-    customer_count: string;
-  }
-  const reportId = '975558342579404800';
-  const items = ref<Item[]>([]);
+
+  // const reportId = '975558342579404800';
+
+  const reports = [
+    {
+      reportId: '975558342579404800',
+      key: 'operareanamestr',
+      label: '运行区域',
+    },
+    {
+      reportId: '975657508840226816',
+      key: 'productnamestr',
+      label: '产品名称',
+    },
+  ];
+
+  const report = ref<(typeof reports)[number]>(reports[0]);
+
+  const items = ref<any[]>([]);
   const inputItems = ref<InputItem[]>([]);
   const loading = ref(true);
   const columns = ref<BasicColumn[]>([]);
@@ -52,7 +75,17 @@
   const state = ref<any>({
     pageNo: 1,
     pageSize: 10,
+    // 总共的页数
+    total: 0,
+    // 总共的条数
+    count: 0,
   });
+
+  const paginationChange = (page: number, pageSize: number) => {
+    state.value.pageNo = page;
+    state.value.pageSize = pageSize;
+    getData();
+  };
 
   const data = computed(() => {
     if (items.value.length === 0) {
@@ -137,7 +170,7 @@
       return items.value.map((i) => {
         return {
           value: i.customer_count,
-          name: i.operareanamestr,
+          name: i[report.value.key],
         };
       });
     }
@@ -150,7 +183,7 @@
       return items.value.map((i) => {
         return {
           value: i.subscriber_count,
-          name: i.operareanamestr,
+          name: i[report.value.key],
         };
       });
     }
@@ -159,20 +192,22 @@
   const getData = async () => {
     loading.value = true;
     await Promise.all([
-      show<Item>(reportId, state.value).then((res) => {
-        console.log('show', JSON.parse(res.jsonStr));
-
+      show(report.value.reportId, state.value).then((res) => {
+        state.value.total = res.dataList.utf8.total;
+        state.value.count = res.dataList.utf8.count;
         items.value = res.dataList.utf8.list;
       }),
-      getColumnsByReportId(reportId).then((res) => {
-        columns.value = res.map((i) => {
-          return {
-            title: i.fieldText,
-            dataIndex: i.title,
-          };
-        });
+      getColumnsByReportId(report.value.reportId).then((res) => {
+        columns.value = res
+          .filter((i) => !excludeIndex.includes(i.title))
+          .map((i) => {
+            return {
+              title: i.fieldText,
+              dataIndex: i.title,
+            };
+          });
       }),
-      getFormItems(reportId).then((res) => {
+      getFormItems(report.value.reportId).then((res) => {
         inputItems.value = res.list;
 
         // 这是查询条件和分页的默认值
@@ -196,4 +231,10 @@
   // .input {
   //   display: flex;
   // }
+
+  .pag {
+    display: flex;
+    flex-direction: row-reverse;
+    margin-right: 30px;
+  }
 </style>

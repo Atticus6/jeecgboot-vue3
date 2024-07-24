@@ -113,6 +113,8 @@ export interface BasicColumn {
   dataIndex: string;
 }
 
+export const excludeIndex = ['pagehelper_row_id'];
+
 /**
  * 根据 reportId获取信息
  */
