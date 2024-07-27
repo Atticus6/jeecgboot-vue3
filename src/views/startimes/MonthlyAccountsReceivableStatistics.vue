@@ -12,14 +12,9 @@
 
   const reports = [
     {
-      reportId: '976385364197195776',
-      key: 'operareanamestr',
+      reportId: '975962116145889280',
+      key: 'invoicecycnamestr',
       label: '运营区域',
-    },
-    {
-      reportId: '976365521519591424',
-      key: 'productnamestr',
-      label: '产品名称',
     },
   ];
 
@@ -74,21 +69,7 @@
     } else {
       return items.value.map((i) => {
         return {
-          value: i.customer_count,
-          name: i[report.value.key],
-        };
-      });
-    }
-  });
-
-  const line2 = computed(() => {
-    console.log('line2');
-    if (items.value.length === 0 || columns.value.length === 0) {
-      return [];
-    } else {
-      return items.value.map((i) => {
-        return {
-          value: i.subscriber_count,
+          value: i.summoney,
           name: i[report.value.key],
         };
       });
@@ -286,14 +267,9 @@
       <STCard v-if="showMaps.includes('bar')">
         <Bar :chart-data="line1" height="40vh" :option="{ title: { text: '订购用户数', left: 'center' } }"
       /></STCard>
-      <STCard v-if="showMaps.includes('bar')">
-        <Bar :chart-data="line2" height="40vh" :option="{ title: { text: '订购次数', left: 'center' } }"
-      /></STCard>
+
       <STCard v-show="showMaps.includes('pie')">
         <Pie :chart-data="line1" height="40vh" :option="{ title: { text: '订购用户数', left: 'center' } }"
-      /></STCard>
-      <STCard v-show="showMaps.includes('pie')">
-        <Pie :chart-data="line2" height="40vh" :option="{ title: { text: '订购次数', left: 'center' } }"
       /></STCard>
     </div>
   </Container>

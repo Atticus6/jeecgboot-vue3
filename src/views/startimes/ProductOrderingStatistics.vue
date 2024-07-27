@@ -12,14 +12,14 @@
 
   const reports = [
     {
-      reportId: '976385364197195776',
-      key: 'operareanamestr',
-      label: '运营区域',
-    },
-    {
-      reportId: '976365521519591424',
+      reportId: '976366834009587712',
       key: 'productnamestr',
       label: '产品名称',
+    },
+    {
+      reportId: '976615750844104704',
+      key: 'operareanamestr',
+      label: '运营区域',
     },
   ];
 
@@ -47,6 +47,8 @@
   const showMaps = ref(['pie', 'bar']);
 
   const paginationChange = (page: number, pageSize: number) => {
+    console.log('paginationChange');
+
     state.value.pageNo = page;
     state.value.pageSize = pageSize;
     // false 不需要重新获取表单和表头
@@ -74,7 +76,7 @@
     } else {
       return items.value.map((i) => {
         return {
-          value: i.customer_count,
+          value: i.order_sub_count,
           name: i[report.value.key],
         };
       });
@@ -88,7 +90,7 @@
     } else {
       return items.value.map((i) => {
         return {
-          value: i.subscriber_count,
+          value: i.order_count,
           name: i[report.value.key],
         };
       });
@@ -155,6 +157,8 @@
   };
 
   onMounted(() => {
+    console.log('onMounted');
+
     getData();
   });
 
@@ -168,11 +172,14 @@
         delete state.value[k];
       }
     });
+    console.log('submit');
 
     getData(false);
   }
 
   const reportChange = (r: (typeof reports)[number]) => {
+    console.log('reportChange');
+
     report.value = r;
     getData();
   };

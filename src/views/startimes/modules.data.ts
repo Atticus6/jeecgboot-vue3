@@ -132,32 +132,6 @@ export function show<T = any>(reportId: string, params: any) {
   });
 }
 
-// export const getAllReport = () => {
-//   const token = getToken();
-
-//   return defHttp.get<Pag<Report>>({
-//     url: '/jmreport/excelQuery',
-//     params: {
-//       token,
-//     },
-//   });
-// };
-
-// export function getDataByCode<T = any>(code: string) {
-//   const token = getToken();
-
-//   return defHttp.post<T[]>({
-//     url: '/jmreport/qurestSql',
-//     data: {
-//       apiSelectId: code,
-//       jmViewFirstLoad: '1',
-//     },
-//     params: {
-//       token,
-//     },
-//   });
-// }
-
 export interface Col {
   expand: boolean;
   // 对象属性
@@ -170,7 +144,7 @@ export async function getColumnsByReportId(reportId: string) {
   const res = await defHttp.get({
     url: `/jmreport/field/tree/${reportId}`,
   });
-  const target = (res[0] as any[]).find((item) => item.code === 'utf8');
+  const target = (res[0] as any[]).find((item) => 'utf8' === item.code);
   const cols = target.children;
   return cols as Col[];
 }
@@ -228,4 +202,52 @@ export function getFormItems(reportId: string) {
       'X-Access-Token': token,
     },
   });
+}
+
+const selects = {
+  businessid: {
+    name: '业务类型',
+    path: 'getDmBusinessType',
+  },
+  businessid_pk: {
+    name: '业务类型',
+    path: 'getDmBusinessType',
+  },
+  custtypeid: {
+    name: '客户类型',
+    path: 'getDictData?dictTypeId=1204',
+  },
+  operareaid: {
+    name: '运营区域',
+    path: 'getDmSaleArea',
+  },
+} as const;
+
+export type S = keyof typeof selects;
+export const selectKeys = Object.keys(selects) as S[];
+export type SelectOption = {
+  id: string;
+  name: string;
+  code: string;
+  status: 0 | 1;
+};
+export function getSelectByKey(key: S) {
+  console.log('getSelectByKey');
+
+  const token = getToken();
+  const taget = selects[key];
+  return defHttp
+    .get<SelectOption[]>({
+      url: `/dm/api/${taget.path}`,
+      params: {
+        token,
+      },
+    })
+    .then((res) => {
+      return {
+        list: res,
+        name: taget.name,
+        key,
+      };
+    });
 }
