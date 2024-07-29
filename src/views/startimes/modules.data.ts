@@ -144,7 +144,7 @@ export async function getColumnsByReportId(reportId: string) {
   const res = await defHttp.get({
     url: `/jmreport/field/tree/${reportId}`,
   });
-  const target = (res[0] as any[]).find((item) => 'utf8' === item.code);
+  const target = (res[0] as any[])[0];
   const cols = target.children;
   return cols as Col[];
 }
@@ -171,11 +171,11 @@ export type InputItem = {
   loadTreeByValue: null;
 } & (
   | {
-      mode: InputMode.SELECT;
+      mode: 4;
       dictList: DictList[];
     }
   | {
-      mode: InputMode;
+      mode: 1;
       dictList: null;
     }
 );
@@ -217,9 +217,25 @@ const selects = {
     name: '客户类型',
     path: 'getDictData?dictTypeId=1204',
   },
+  custypeid: {
+    name: '客户类型',
+    path: 'getDictData?dictTypeId=1204',
+  },
   operareaid: {
     name: '运营区域',
     path: 'getDmSaleArea',
+  },
+  rateclassid: {
+    name: '账目类型',
+    path: 'getDmRateclassType',
+  },
+  operwayid: {
+    name: '运营方式',
+    path: 'getDmSaleChannel',
+  },
+  subtypeid: {
+    name: '用户类型',
+    path: 'getDictData?dictTypeId=1300',
   },
 } as const;
 
