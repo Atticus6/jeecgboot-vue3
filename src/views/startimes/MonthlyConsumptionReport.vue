@@ -5,8 +5,8 @@
     {
       reportId: '977785162464837632',
       key: 'operareaname',
-      label: '年消费报表',
-      tableNmae: 'annualConsumptionReport',
+      label: '月消费报表',
+      tableNmae: 'operareaid',
     },
   ];
 </script>
