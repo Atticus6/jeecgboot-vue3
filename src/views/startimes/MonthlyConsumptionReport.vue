@@ -3,10 +3,10 @@
 
   const reports = [
     {
-      reportId: '977785162464837632',
+      reportId: '977782879769411584',
       key: 'operareaname',
       label: '月消费报表',
-      tableNmae: 'operareaid',
+      tableNmae: 'monthlyConsumptionReport',
     },
   ];
 </script>
