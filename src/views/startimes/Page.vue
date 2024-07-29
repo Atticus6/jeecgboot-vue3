@@ -16,13 +16,17 @@
     tableNmae: string;
   };
 
-  const { reports, mapList } = withDefaults(
+  const { reports, mapList, showColumnSetting, toFixedNum } = withDefaults(
     defineProps<{
       reports: ReportType[];
       mapList?: ('pie' | 'bar')[];
+      showColumnSetting?: boolean;
+      toFixedNum?: number;
     }>(),
     {
       mapList: () => ['pie', 'bar'],
+      showColumnSetting: true,
+      toFixedNum: 0,
     }
   );
 
@@ -69,9 +73,12 @@
         if (c.dataIndex === report.value.key) {
           summary[c.dataIndex] = '合计';
         } else {
-          summary[c.dataIndex] = items.value.reduce(function (prev, cur) {
-            return prev + parseFloat(cur[c.dataIndex]);
-          }, 0);
+          summary[c.dataIndex] = items.value
+            .reduce(function (prev, cur) {
+              const sum = (prev + parseFloat(cur[c.dataIndex])) as number;
+              return sum;
+            }, 0)
+            .toFixed(toFixedNum);
         }
       });
 
@@ -229,7 +236,7 @@
           </a-form>
         </div>
         <!-- 系统指标设置 -->
-        <div>
+        <div v-if="showColumnSetting">
           <Divider>系统指标设置</Divider>
           <div class="flex flex-col gap-2 lg:gap-0 lg:flex-row lg:justify-between">
             <div class="flex">
@@ -255,8 +262,8 @@
           <a-checkbox-group
             v-model:value="showMaps"
             :options="[
-              { label: '柱形图', value: 'pie' },
-              { label: '圆饼图', value: 'bar' },
+              { label: '柱形图', value: 'bar' },
+              { label: '圆饼图', value: 'pie' },
             ]"
           />
         </div>

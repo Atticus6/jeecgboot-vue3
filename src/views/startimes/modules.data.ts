@@ -215,10 +215,42 @@ const selects = {
   },
   custtypeid: {
     name: '客户类型',
-    path: 'getDictData?dictTypeId=1204',
+    path: null,
+    options: [
+      {
+        status: 1,
+        code: '0',
+        id: '0',
+        name: 'Individual',
+      },
+      {
+        status: 1,
+        code: '1',
+        id: '1',
+        name: 'Group',
+      },
+    ] as SelectOption[],
   },
   custypeid: {
     name: '客户类型',
+    path: null,
+    options: [
+      {
+        status: 1,
+        code: '0',
+        id: '0',
+        name: 'Individual',
+      },
+      {
+        status: 1,
+        code: '1',
+        id: '1',
+        name: 'Group',
+      },
+    ] as SelectOption[],
+  },
+  cuslevelid: {
+    name: '客户级别',
     path: 'getDictData?dictTypeId=1204',
   },
   operareaid: {
@@ -231,7 +263,21 @@ const selects = {
   },
   operwayid: {
     name: '运营方式',
-    path: 'getDmSaleChannel',
+    path: null,
+    options: [
+      {
+        status: 1,
+        code: '1',
+        id: '1',
+        name: 'Prepaid',
+      },
+      {
+        status: 1,
+        code: '2',
+        id: '2',
+        name: 'Postpaid',
+      },
+    ] as SelectOption[],
   },
   subtypeid: {
     name: '用户类型',
@@ -252,10 +298,16 @@ export type SelectOption = {
   status: 0 | 1;
 };
 export function getSelectByKey(key: S) {
-  console.log('getSelectByKey');
-
   const token = getToken();
   const taget = selects[key];
+
+  if (taget.path === null) {
+    return Promise.resolve({
+      list: taget.options,
+      name: taget.name,
+      key,
+    });
+  }
   return defHttp
     .get<SelectOption[]>({
       url: `/dm/api/${taget.path}`,

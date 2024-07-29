@@ -12,5 +12,5 @@
 </script>
 
 <template>
-  <Page :reports="reports" />
+  <Page :reports="reports" :showColumnSetting="false" :toFixedNum="2" />
 </template>
