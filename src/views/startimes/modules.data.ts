@@ -283,9 +283,35 @@ const selects = {
     name: '用户类型',
     path: 'getDictData?dictTypeId=1300',
   },
+  societytypeid: {
+    name: '社会类别',
+    path: 'getDictData?dictTypeId=1202',
+  },
   salechannelid: {
     name: '营销渠道',
     path: 'getDmSaleChannel',
+  },
+  a: {
+    name: '资源类型',
+    path: 'getDmResourceType',
+  },
+  productchildtypeid: {
+    name: '产品类型',
+    path: null,
+    options: [
+      {
+        status: 1,
+        code: '1',
+        id: '1',
+        name: 'physical',
+      },
+      {
+        status: 1,
+        code: '2',
+        id: '2',
+        name: 'service',
+      },
+    ] as SelectOption[],
   },
 } as const;
 

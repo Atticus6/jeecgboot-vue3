@@ -16,6 +16,13 @@
 
       tableNmae: 'utf8',
     },
+    {
+      reportId: '977781599823020032',
+      key: 'productchildtypeid',
+      label: '产品类型',
+
+      tableNmae: 'utf8',
+    },
   ];
 </script>
 
