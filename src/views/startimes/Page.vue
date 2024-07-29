@@ -60,20 +60,27 @@
   };
 
   const data = computed(() => {
-    console.log('data');
-
     if (items.value.length === 0) {
       return [];
     } else {
+      const summary: any = { id: '-1' };
+
+      columns.value.forEach((c) => {
+        if (c.dataIndex === report.value.key) {
+          summary[c.dataIndex] = '合计';
+        } else {
+          summary[c.dataIndex] = items.value.reduce(function (prev, cur) {
+            return prev + parseFloat(cur[c.dataIndex]);
+          }, 0);
+        }
+      });
+
       const target = items.value.map((i) => ({
         ...i,
         id: i.jimu_row_id,
       }));
 
-      // const summary: any = {};
-      // columns.value.map(c=>{
-
-      // })
+      target.push(summary);
       return target;
     }
   });
@@ -183,7 +190,7 @@
   };
 </script>
 <template>
-  <div class="min-h-screen bg-gray-100 dark:bg-gray-900 p-1 md:p-2 lg:p-3 flex flex-col gap-2 mt-3">
+  <div class="min-h-screen bg-gray-100 dark:bg-gray-900 p-1 md:p-2 lg:p-3 flex flex-col gap-2 mt-1">
     <!-- 表单区域 -->
     <Card>
       <div class="flex flex-col gap-1 md:gap-2 lg:gap-4">
@@ -210,7 +217,7 @@
                   class="w-full"
                   allowClear
                   :valueFormat="item.format || 'YYYY-MM-DD'"
-                  :picker="item.realType"
+                  :picker="item.realType === 'datetime' ? 'date' : item.realType"
                 />
                 <a-input v-else v-model:value="formScheam[item.name]" allowClear />
               </div>
