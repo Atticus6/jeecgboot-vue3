@@ -237,6 +237,10 @@ const selects = {
     name: '用户类型',
     path: 'getDictData?dictTypeId=1300',
   },
+  salechannelid: {
+    name: '营销渠道',
+    path: 'getDmSaleChannel',
+  },
 } as const;
 
 export type S = keyof typeof selects;

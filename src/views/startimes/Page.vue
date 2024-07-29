@@ -204,7 +204,7 @@
           >
             <a-form-item v-for="(item, i) in inputItems" :key="i" :name="item.name" noStyle>
               <div class="flex items-center">
-                <div class="w-30 md:w-25 line-clamp-1">{{ item.title }}:</div>
+                <div class="w-30">{{ item.title }}:</div>
                 <a-select v-if="selectStore.getSelectBykey(item.name)" v-model:value="formScheam[item.name]" allowClear>
                   <a-select-option v-for="(option, j) in selectStore.getSelectBykey(item.name)!.list" :key="j" :value="option.id">{{
                     option.name
