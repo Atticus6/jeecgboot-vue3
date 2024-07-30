@@ -1,12 +1,13 @@
 <script lang="ts" setup>
   import Page from './Page.vue';
 
-  // 缴费月报表
+  // 产品销售月统计
+
   const reports = [
     {
-      reportId: '977816581664751616',
+      reportId: '976385364197195776',
       key: 'operareanamestr',
-      label: '运莒区域',
+      label: '运营区域',
       tableNmae: 'utf8',
     },
   ];

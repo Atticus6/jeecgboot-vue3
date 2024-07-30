@@ -5,6 +5,7 @@
   import lodash from 'lodash-es';
   import Bar from '/@/components/chart/Bar.vue';
   import Pie from '/@/components/chart/Pie.vue';
+  import { useMediaQuery } from '@vueuse/core';
 
   import { Pagination } from 'ant-design-vue';
   import { useSelectStore } from './store';
@@ -29,7 +30,7 @@
       toFixedNum: 0,
     }
   );
-
+  const isPC = useMediaQuery('(min-width: 768px)');
   const report = ref<ReportType>(reports[0]);
   const selectStore = useSelectStore();
 
@@ -37,7 +38,7 @@
   const items = ref<any[]>([]);
   // 表单项
   const inputItems = ref<InputItem[]>([]);
-  const loading = ref(true);
+  const loading = ref(false);
   const columns = ref<BasicColumn[]>([]);
   const showColumnIdx = ref<string[]>([]);
   // 分页
@@ -64,6 +65,8 @@
   };
 
   const data = computed(() => {
+    console.log(' computed data');
+
     if (items.value.length === 0) {
       return [];
     } else {
@@ -93,18 +96,24 @@
   });
 
   const mapsData = computed(() => {
+    console.log(' computed mapsData');
     return columns.value
       .filter((c) => c.dataIndex !== report.value.key)
       .map((c) => ({
         title: c.title,
         data: items.value.map((i) => ({
           name: i[report.value.key],
-          value: i[c.dataIndex],
+          value: Math.abs(i[c.dataIndex]),
         })),
       }));
   });
 
   const getData = async (loaddColumnsAndForm = true) => {
+    console.log('getData');
+
+    if (loading.value) {
+      return;
+    }
     loading.value = true;
     await Promise.all([
       show(report.value.reportId, state.value).then((res) => {
@@ -169,6 +178,8 @@
   });
 
   function submit() {
+    console.log('submit');
+
     inputItems.value.forEach((i) => {
       const k = i.name;
       const v = formScheam[k];
@@ -183,13 +194,19 @@
   }
 
   const reportChange = (r: ReportType) => {
+    console.log('reportChange');
+
     report.value = r;
     getData();
   };
 
   //   部分组件
   const Card: FunctionalComponent = (_props: any, ctx: any) => {
-    return <a-card class="shadow-sm hover:shadow-md duration-300 border east-in-out">{ctx.slots.default()}</a-card>;
+    return (
+      <a-card class="shadow-sm hover:shadow-md duration-500  border east-in-out " size="small">
+        {ctx.slots.default()}
+      </a-card>
+    );
   };
 
   const Divider: FunctionalComponent = (_props: any, ctx: any) => {
@@ -199,7 +216,7 @@
 <template>
   <div class="min-h-screen bg-gray-100 dark:bg-gray-900 p-1 md:p-2 lg:p-3 flex flex-col gap-2 mt-1">
     <!-- 表单区域 -->
-    <Card>
+    <Card class="px-2 py-1 md:px-4 md:py-2">
       <div class="flex flex-col gap-1 md:gap-2 lg:gap-4">
         <!-- 条件设置 -->
         <div>
@@ -211,12 +228,12 @@
           >
             <a-form-item v-for="(item, i) in inputItems" :key="i" :name="item.name" noStyle>
               <div class="flex items-center">
-                <div class="w-30">{{ item.title }}:</div>
+                <div class="w-30 md:w-26">{{ item.title }}:</div>
                 <a-select
                   v-if="selectStore.getSelectBykey(item.name)"
                   v-model:value="formScheam[item.name]"
                   allowClear
-                  :placeholder="`请选择${item.title}`"
+                  :placeholder="isPC && `请选择${item.title}`"
                 >
                   <a-select-option v-for="(option, j) in selectStore.getSelectBykey(item.name)!.list" :key="j" :value="option.id">{{
                     option.name
@@ -231,7 +248,7 @@
                   :valueFormat="item.format || 'YYYY-MM-DD'"
                   :picker="item.realType === 'datetime' ? 'date' : item.realType"
                 />
-                <a-input v-else v-model:value="formScheam[item.name]" allowClear :placeholder="`请输入${item.title}`" />
+                <a-input v-else v-model:value="formScheam[item.name]" allowClear :placeholder="isPC ? `请输入${item.title}` : ''" />
               </div>
             </a-form-item>
 
@@ -301,8 +318,8 @@
     </Card>
 
     <!--  图区域 -->
-    <template v-if="mapList.length !== 0">
-      <div v-show="data.length !== 0" class="grid grid-cols-1 lg:grid-cols-2 gap-1 md:gap-2 lg:gap-3">
+    <template v-if="mapList.length !== 0 && data.length !== 0">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-1 md:gap-2 lg:gap-3">
         <template v-if="showMaps.includes('bar')">
           <Card v-for="(d, i) in mapsData" :key="i">
             <Bar :chart-data="d.data" height="40vh" :option="{ title: { text: d.title, left: 'center' } }"

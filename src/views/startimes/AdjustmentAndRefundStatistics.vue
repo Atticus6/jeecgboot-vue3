@@ -13,5 +13,5 @@
 
 <template>
   <!-- wlt 该页面接口不同 需要重写 -->
-  <Page :reports="reports" :showColumnSetting="false" />
+  <Page :reports="reports" :showColumnSetting="false" :toFixedNum="2" />
 </template>

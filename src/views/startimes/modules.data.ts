@@ -209,28 +209,7 @@ const selects = {
     name: '业务类型',
     path: 'getDmBusinessType',
   },
-  businessid_pk: {
-    name: '业务类型',
-    path: 'getDmBusinessType',
-  },
-  custtypeid: {
-    name: '客户类型',
-    path: null,
-    options: [
-      {
-        status: 1,
-        code: '0',
-        id: '0',
-        name: 'Individual',
-      },
-      {
-        status: 1,
-        code: '1',
-        id: '1',
-        name: 'Group',
-      },
-    ] as SelectOption[],
-  },
+
   custypeid: {
     name: '客户类型',
     path: null,
@@ -313,6 +292,28 @@ const selects = {
       },
     ] as SelectOption[],
   },
+  paymethodid: {
+    name: '付款方式',
+    path: 'getDmPaymentMethod',
+  },
+  tradetypeid: {
+    name: '操作类型',
+    path: null,
+    options: [
+      {
+        status: 1,
+        code: '0',
+        id: '0',
+        name: '付费',
+      },
+      {
+        status: 1,
+        code: '1',
+        id: '1',
+        name: '收费',
+      },
+    ] as SelectOption[],
+  },
 } as const;
 
 export type S = keyof typeof selects;
@@ -324,7 +325,6 @@ export type SelectOption = {
   status: 0 | 1;
 };
 export function getSelectByKey(key: S) {
-  const token = getToken();
   const taget = selects[key];
 
   if (taget.path === null) {
@@ -334,6 +334,7 @@ export function getSelectByKey(key: S) {
       key,
     });
   }
+  const token = getToken();
   return defHttp
     .get<SelectOption[]>({
       url: `/dm/api/${taget.path}`,
