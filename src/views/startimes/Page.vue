@@ -212,7 +212,12 @@
             <a-form-item v-for="(item, i) in inputItems" :key="i" :name="item.name" noStyle>
               <div class="flex items-center">
                 <div class="w-30">{{ item.title }}:</div>
-                <a-select v-if="selectStore.getSelectBykey(item.name)" v-model:value="formScheam[item.name]" allowClear>
+                <a-select
+                  v-if="selectStore.getSelectBykey(item.name)"
+                  v-model:value="formScheam[item.name]"
+                  allowClear
+                  :placeholder="`请选择${item.title}`"
+                >
                   <a-select-option v-for="(option, j) in selectStore.getSelectBykey(item.name)!.list" :key="j" :value="option.id">{{
                     option.name
                   }}</a-select-option>
@@ -226,7 +231,7 @@
                   :valueFormat="item.format || 'YYYY-MM-DD'"
                   :picker="item.realType === 'datetime' ? 'date' : item.realType"
                 />
-                <a-input v-else v-model:value="formScheam[item.name]" allowClear />
+                <a-input v-else v-model:value="formScheam[item.name]" allowClear :placeholder="`请输入${item.title}`" />
               </div>
             </a-form-item>
 

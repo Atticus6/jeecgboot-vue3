@@ -13,5 +13,5 @@
 </script>
 
 <template>
-  <Page :reports="reports" :to-fixed-num="2" />
+  <Page :reports="reports" :to-fixed-num="2" :show-column-setting="false" />
 </template>
