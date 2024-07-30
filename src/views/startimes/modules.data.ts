@@ -1,80 +1,26 @@
 import { getToken } from '/@/utils/auth';
 import { defHttp } from '/@/utils/http/axios';
 
-export type Pag<T = any> = {
-  // 当前页数
-  pageNo: number;
-  // 每页多少条
-  pageSize: number;
-  //  总共多少条
-  total: number;
-  // 一共多少页
-  pages: number;
-  // 数据
-  records: T[];
-};
-
 export interface Report {
   id: string;
   code: string;
   name: string;
-  note: null;
-  status: null;
-  type: string;
-  jsonStr: null;
-  apiUrl: null;
-  apiMethod: null;
-  apiCode: null;
   // 封面地址
   thumb: string | null;
-  template: number;
-  createBy: null;
-  createTime: null;
-  updateBy: null;
-  updateTime: null;
-  dataList: null;
-  dictInfo: null;
-  delFlag: null;
-  viewCount: null;
-  cssStr: null;
-  jsStr: null;
-  pyStr: null;
-  tenantId: null;
-  isRefresh: null;
-  shareViewUrl: null;
 }
 
 export interface ColumnItem {
   id: string;
-  jimuReportHeadId: null;
+
   paramName: string;
   paramTxt: string;
   paramValue: string;
-  orderNum: null;
-  createBy: null;
-  createTime: null;
-  updateBy: null;
-  updateTime: null;
-  searchFlag: null;
-  widgetType: null;
-  searchMode: null;
-  dictCode: null;
-  searchFormat: null;
-  extJson: null;
 }
 
 export interface Show<T = any> {
   id: string;
   code: string;
   name: string;
-  note: null;
-  status: null;
-  type: string;
-  jsonStr: string;
-  apiUrl: null;
-  apiMethod: null;
-  apiCode: null;
-  thumb: null;
   template: number;
   createBy: string;
   createTime: Date;
@@ -95,15 +41,6 @@ export interface Show<T = any> {
       linkList: null;
     };
   };
-  dictInfo: null;
-  delFlag: number;
-  viewCount: number;
-  cssStr: null;
-  jsStr: null;
-  pyStr: null;
-  tenantId: string;
-  isRefresh: null;
-  shareViewUrl: null;
 }
 
 export interface ExpData {}

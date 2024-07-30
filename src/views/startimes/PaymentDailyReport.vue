@@ -4,9 +4,15 @@
   // 缴费日报表
   const reports = [
     {
-      reportId: '976385364197195776',
+      reportId: '978146687062982656',
       key: 'operareanamestr',
       label: '运营区域',
+      tableNmae: 'utf8',
+    },
+    {
+      reportId: '978148276964245504',
+      key: 'payment_day',
+      label: '统计日期',
       tableNmae: 'utf8',
     },
   ];

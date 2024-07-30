@@ -6,7 +6,7 @@
   import Bar from '/@/components/chart/Bar.vue';
   import Pie from '/@/components/chart/Pie.vue';
   import { useMediaQuery } from '@vueuse/core';
-
+  import { SettingOutlined } from '@ant-design/icons-vue';
   import { Pagination } from 'ant-design-vue';
   import { useSelectStore } from './store';
 
@@ -25,6 +25,7 @@
       toFixedNum?: number;
     }>(),
     {
+      // 展示的图标
       mapList: () => ['pie', 'bar'],
       showColumnSetting: true,
       toFixedNum: 0,
@@ -114,8 +115,57 @@
     if (loading.value) {
       return;
     }
+
+    // 获取表头
+    const getClounmn = () =>
+      getColumnsByReportId(report.value.reportId)
+        .then((res) => res.filter((i) => !excludeIndex.includes(i.title)))
+        .then((res) => {
+          columns.value = res.map((i) => {
+            return {
+              title: i.fieldText,
+              dataIndex: i.title,
+            };
+          });
+
+          showColumnIdx.value = res.map((i) => i.title);
+        });
+
+    // 获取表单项
+    const getFormData = () =>
+      getFormItems(report.value.reportId).then(async (res) => {
+        // 这是查询条件和分页的默认值
+        const stateKeys = Object.keys(state.value);
+        res.list.forEach((l) => {
+          if (l.defaultValue !== '' && !stateKeys.includes(l.name)) {
+            state.value[l.name] = l.defaultValue;
+          }
+        });
+
+        // 下拉框获取选项存放在selectStore中
+        const willfetchKeys: string[] = [];
+        res.list.forEach((l) => {
+          if (selectStore.okToFetch(l.name)) {
+            willfetchKeys.push(l.name);
+          }
+        });
+
+        if (willfetchKeys.length !== 0) {
+          await Promise.all(
+            willfetchKeys.map((w) => {
+              return getSelectByKey(w as S).then((r) => {
+                selectStore.addSelect(r);
+              });
+            })
+          );
+        }
+
+        inputItems.value = res.list;
+      });
+
     loading.value = true;
     await Promise.all([
+      // 获取表格数据
       show(report.value.reportId, state.value).then((res) => {
         state.value.total = res.dataList[report.value.tableNmae].total;
         state.value.count = res.dataList[report.value.tableNmae].count;
@@ -123,51 +173,9 @@
         items.value = res.dataList[report.value.tableNmae].list;
       }),
       // 获取表头
-      loaddColumnsAndForm &&
-        getColumnsByReportId(report.value.reportId)
-          .then((res) => res.filter((i) => !excludeIndex.includes(i.title)))
-          .then((res) => {
-            columns.value = res.map((i) => {
-              return {
-                title: i.fieldText,
-                dataIndex: i.title,
-              };
-            });
-
-            showColumnIdx.value = res.map((i) => i.title);
-          }),
-
+      loaddColumnsAndForm && getClounmn(),
       // 获取表单项
-      loaddColumnsAndForm &&
-        getFormItems(report.value.reportId).then(async (res) => {
-          // 这是查询条件和分页的默认值
-          const stateKeys = Object.keys(state.value);
-          res.list.forEach((l) => {
-            if (l.defaultValue !== '' && !stateKeys.includes(l.name)) {
-              state.value[l.name] = l.defaultValue;
-            }
-          });
-
-          // 下拉框获取选项存放在selectStore中
-          const willfetchKeys: string[] = [];
-          res.list.forEach((l) => {
-            if (selectStore.okToFetch(l.name)) {
-              willfetchKeys.push(l.name);
-            }
-          });
-
-          if (willfetchKeys.length !== 0) {
-            await Promise.all(
-              willfetchKeys.map((w) => {
-                return getSelectByKey(w as S).then((r) => {
-                  selectStore.addSelect(r);
-                });
-              })
-            );
-          }
-
-          inputItems.value = res.list;
-        }),
+      loaddColumnsAndForm && getFormData(),
     ]).finally(() => {
       loading.value = false;
     });
@@ -260,34 +268,12 @@
         <!-- 系统指标设置 -->
         <div v-if="showColumnSetting">
           <Divider>系统指标设置</Divider>
-          <div class="flex flex-col gap-2 lg:gap-0 lg:flex-row lg:justify-between">
-            <div class="flex">
-              指标选择:
-              <a-checkbox-group v-model:value="showColumnIdx">
-                <a-checkbox v-for="(c, i) in columns" :key="i" :value="c.dataIndex">{{ c.title }}</a-checkbox>
-              </a-checkbox-group>
-            </div>
-            <div v-if="reports.length >= 2">
-              分组维度选择:
-              <a-radio-group :value="report.reportId">
-                <a-radio v-for="(item, i) in reports" :key="i" :value="item.reportId" @click="reportChange(item)">{{ item.label }}</a-radio>
-              </a-radio-group>
-            </div>
+          <div v-if="reports.length >= 2">
+            分组维度选择:
+            <a-radio-group :value="report.reportId">
+              <a-radio v-for="(item, i) in reports" :key="i" :value="item.reportId" @click="reportChange(item)">{{ item.label }}</a-radio>
+            </a-radio-group>
           </div>
-        </div>
-
-        <!-- 展示图标设置 -->
-        <div>
-          <Divider>展示图标设置</Divider>
-
-          图表类型选择:
-          <a-checkbox-group
-            v-model:value="showMaps"
-            :options="[
-              { label: '柱形图', value: 'bar' },
-              { label: '圆饼图', value: 'pie' },
-            ]"
-          />
         </div>
       </div>
     </Card>
@@ -301,7 +287,22 @@
         :bordered="true"
         :canResize="true"
         :pagination="false"
-      />
+      >
+        <template #toolbar>
+          <a-popover title="Title" placement="topRight" trigger="click">
+            <template #content>
+              <a-checkbox-group v-model:value="showColumnIdx">
+                <div class="flex flex-col">
+                  <a-checkbox v-for="(c, i) in columns" :key="i" :value="c.dataIndex">{{ c.title }}</a-checkbox>
+                </div>
+              </a-checkbox-group>
+            </template>
+            <a-button type="ghost" shape="circle" size="small">
+              <SettingOutlined />
+            </a-button>
+          </a-popover>
+        </template>
+      </BasicTable>
 
       <div class="flex justify-end mr-6">
         <Pagination
@@ -319,19 +320,34 @@
 
     <!--  图区域 -->
     <template v-if="mapList.length !== 0 && data.length !== 0">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-1 md:gap-2 lg:gap-3">
-        <template v-if="showMaps.includes('bar')">
-          <Card v-for="(d, i) in mapsData" :key="i">
-            <Bar :chart-data="d.data" height="40vh" :option="{ title: { text: d.title, left: 'center' } }"
-          /></Card>
-        </template>
+      <Card>
+        <!-- 展示图标设置 -->
+        <div>
+          <Divider>展示图标设置</Divider>
 
-        <template v-if="showMaps.includes('pie')">
-          <Card v-for="(d, i) in mapsData" :key="i">
-            <Pie :chart-data="d.data" height="40vh" :option="{ title: { text: d.title, left: 'center' } }"
-          /></Card>
-        </template>
-      </div>
+          图表类型选择:
+          <a-checkbox-group
+            v-model:value="showMaps"
+            :options="[
+              { label: '柱形图', value: 'bar' },
+              { label: '圆饼图', value: 'pie' },
+            ]"
+          />
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-1 md:gap-2 lg:gap-3">
+          <template v-if="showMaps.includes('bar')">
+            <Card v-for="(d, i) in mapsData" :key="i">
+              <Bar :chart-data="d.data" height="40vh" :option="{ title: { text: d.title, left: 'center' } }"
+            /></Card>
+          </template>
+
+          <template v-if="showMaps.includes('pie')">
+            <Card v-for="(d, i) in mapsData" :key="i">
+              <Pie :chart-data="d.data" height="40vh" :option="{ title: { text: d.title, left: 'center' } }"
+            /></Card>
+          </template>
+        </div>
+      </Card>
     </template>
   </div>
 </template>

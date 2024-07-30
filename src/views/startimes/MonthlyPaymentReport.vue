@@ -9,6 +9,12 @@
       label: '运莒区域',
       tableNmae: 'utf8',
     },
+    {
+      reportId: '978142246385565696',
+      key: 'payment_month',
+      label: '统计月份',
+      tableNmae: 'utf8',
+    },
   ];
 </script>
 
