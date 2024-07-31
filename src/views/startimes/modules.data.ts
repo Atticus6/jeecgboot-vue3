@@ -86,11 +86,6 @@ export async function getColumnsByReportId(reportId: string) {
   return cols as Col[];
 }
 
-export enum InputMode {
-  INPUT = 1,
-  SELECT = 4,
-}
-
 export type InputItem = {
   title: string;
   name: string;
@@ -106,16 +101,9 @@ export type InputItem = {
   dictCode: null;
   loadTree: null;
   loadTreeByValue: null;
-} & (
-  | {
-      mode: 4;
-      dictList: DictList[];
-    }
-  | {
-      mode: 1;
-      dictList: null;
-    }
-);
+  mode: number;
+  dictList: DictList[];
+};
 
 export interface DictList {
   value: string;
@@ -123,7 +111,11 @@ export interface DictList {
   title: string;
 }
 
-// 获取表单列表
+/**
+ * 根据报表id获取表格数据
+ * @param reportId 报表 ID
+ * @returns 表格数据
+ */
 export function getFormItems(reportId: string) {
   const token = getToken();
   return defHttp.get<{
@@ -261,6 +253,11 @@ export type SelectOption = {
   code: string;
   status: 0 | 1;
 };
+/**
+ * 根据属性名获取下拉选项
+ * @param key 属性名
+ * @returns  下拉选项
+ */
 export function getSelectByKey(key: S) {
   const taget = selects[key];
 

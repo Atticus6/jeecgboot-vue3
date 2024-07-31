@@ -279,21 +279,36 @@
     </Card>
 
     <!-- 表区域 -->
-    <Card v-show="showColumnIdx.length !== 0">
+    <Card>
       <BasicTable
         :columns="columns.filter((c) => showColumnIdx.includes(c.dataIndex))"
         :data-source="data"
         :loading="loading"
-        :bordered="true"
-        :canResize="true"
+        size="small"
+        bordered
+        canResize
         :pagination="false"
+        :striped="true"
       >
         <template #toolbar>
-          <a-popover title="Title" placement="topRight" trigger="click">
+          <!-- <a-dropdown>
+            <a class="ant-dropdown-link" @click.prevent>
+              Cascading menu
+              <DownOutlined />
+            </a>
+            <template #overlay>
+              <a-menu>
+                <a-menu-item>1st menu item</a-menu-item>
+                <a-menu-item>2nd menu item</a-menu-item>
+              </a-menu>
+            </template>
+          </a-dropdown> -->
+
+          <a-popover title="设置列" placement="topRight" trigger="click">
             <template #content>
               <a-checkbox-group v-model:value="showColumnIdx">
                 <div class="flex flex-col">
-                  <a-checkbox v-for="(c, i) in columns" :key="i" :value="c.dataIndex">{{ c.title }}</a-checkbox>
+                  <a-checkbox v-for="(c, i) in columns" v-show="i !== 0" :key="i" :value="c.dataIndex">{{ c.title }}</a-checkbox>
                 </div>
               </a-checkbox-group>
             </template>
