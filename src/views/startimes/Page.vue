@@ -208,6 +208,11 @@
     getData();
   };
 
+  // select 搜索
+  const filterOption = (input: string, option: any) => {
+    return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+  };
+
   //   部分组件
   const Card: FunctionalComponent = (_props: any, ctx: any) => {
     return (
@@ -242,10 +247,16 @@
                   v-model:value="formScheam[item.name]"
                   allowClear
                   :placeholder="isPC && `请选择${item.title}`"
+                  show-search
+                  :filter-option="filterOption"
                 >
-                  <a-select-option v-for="(option, j) in selectStore.getSelectBykey(item.name)!.list" :key="j" :value="option.id">{{
-                    option.name
-                  }}</a-select-option>
+                  <a-select-option
+                    v-for="(option, j) in selectStore.getSelectBykey(item.name)!.list"
+                    :key="j"
+                    :value="option.id"
+                    :label="option.name"
+                    >{{ option.name }}</a-select-option
+                  >
                 </a-select>
 
                 <a-date-picker
@@ -266,9 +277,9 @@
           </a-form>
         </div>
         <!-- 系统指标设置 -->
-        <div v-if="showColumnSetting">
+        <div v-if="showColumnSetting && reports.length >= 2">
           <Divider>系统指标设置</Divider>
-          <div v-if="reports.length >= 2">
+          <div>
             分组维度选择:
             <a-radio-group :value="report.reportId">
               <a-radio v-for="(item, i) in reports" :key="i" :value="item.reportId" @click="reportChange(item)">{{ item.label }}</a-radio>
@@ -280,6 +291,21 @@
 
     <!-- 表区域 -->
     <Card>
+      <div>
+        <a-popover title="设置列" placement="topLeft" trigger="hover">
+          <template #content>
+            <a-checkbox-group v-model:value="showColumnIdx">
+              <div class="flex flex-col">
+                <a-checkbox v-for="(c, i) in columns" v-show="i !== 0" :key="i" :value="c.dataIndex">{{ c.title }}</a-checkbox>
+              </div>
+            </a-checkbox-group>
+          </template>
+          <a-button type="ghost" shape="circle" size="small">
+            <SettingOutlined />
+          </a-button>
+        </a-popover>
+      </div>
+
       <BasicTable
         :columns="columns.filter((c) => showColumnIdx.includes(c.dataIndex))"
         :data-source="data"
@@ -290,33 +316,8 @@
         :pagination="false"
         :striped="true"
       >
-        <template #toolbar>
-          <!-- <a-dropdown>
-            <a class="ant-dropdown-link" @click.prevent>
-              Cascading menu
-              <DownOutlined />
-            </a>
-            <template #overlay>
-              <a-menu>
-                <a-menu-item>1st menu item</a-menu-item>
-                <a-menu-item>2nd menu item</a-menu-item>
-              </a-menu>
-            </template>
-          </a-dropdown> -->
-
-          <a-popover title="设置列" placement="topRight" trigger="click">
-            <template #content>
-              <a-checkbox-group v-model:value="showColumnIdx">
-                <div class="flex flex-col">
-                  <a-checkbox v-for="(c, i) in columns" v-show="i !== 0" :key="i" :value="c.dataIndex">{{ c.title }}</a-checkbox>
-                </div>
-              </a-checkbox-group>
-            </template>
-            <a-button type="ghost" shape="circle" size="small">
-              <SettingOutlined />
-            </a-button>
-          </a-popover>
-        </template>
+        <!-- <template #toolbar>
+        </template> -->
       </BasicTable>
 
       <div class="flex justify-end mr-6">
