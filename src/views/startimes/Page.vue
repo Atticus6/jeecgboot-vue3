@@ -6,7 +6,7 @@
   import Bar from '/@/components/chart/Bar.vue';
   import Pie from '/@/components/chart/Pie.vue';
   import { useMediaQuery } from '@vueuse/core';
-  import { SettingOutlined } from '@ant-design/icons-vue';
+  import { SettingOutlined, ColumnHeightOutlined } from '@ant-design/icons-vue';
   import { Pagination } from 'ant-design-vue';
   import { useSelectStore } from './store';
 
@@ -31,6 +31,16 @@
       toFixedNum: 0,
     }
   );
+
+  const tableSizeList = [
+    {
+      label: '紧密',
+      value: 'small',
+    },
+    { label: '默认', value: 'middle' },
+    { label: '宽松', value: 'large' },
+  ] as const;
+  const tableSize = ref<(typeof tableSizeList)[number]>(tableSizeList[0]);
   const isPC = useMediaQuery('(min-width: 768px)');
   const report = ref<ReportType>(reports[0]);
   const selectStore = useSelectStore();
@@ -57,7 +67,7 @@
 
   // 去除重复的
   const showMaps = ref(lodash.uniq(mapList));
-
+  const showIndexColumn = ref(true);
   const paginationChange = (page: number, pageSize: number) => {
     state.value.pageNo = page;
     state.value.pageSize = pageSize;
@@ -291,9 +301,11 @@
 
     <!-- 表区域 -->
     <Card>
-      <div>
-        <a-popover title="设置列" placement="topLeft" trigger="hover">
+      <div class="flex gap-2">
+        <!--  列展示设置 -->
+        <a-popover title="设置列" placement="bottomLeft" trigger="hover">
           <template #content>
+            <a-checkbox v-model:checked="showIndexColumn">序号</a-checkbox> <br />
             <a-checkbox-group v-model:value="showColumnIdx">
               <div class="flex flex-col">
                 <a-checkbox v-for="(c, i) in columns" v-show="i !== 0" :key="i" :value="c.dataIndex">{{ c.title }}</a-checkbox>
@@ -304,22 +316,31 @@
             <SettingOutlined />
           </a-button>
         </a-popover>
+
+        <!-- 密度设置 -->
+        <a-dropdown>
+          <ColumnHeightOutlined />
+          <template #overlay>
+            <a-menu>
+              <a-menu-item v-for="i in tableSizeList" :key="i.value" @click="tableSize = i"> {{ i.label }} </a-menu-item>
+            </a-menu>
+          </template>
+        </a-dropdown>
       </div>
 
       <BasicTable
         :columns="columns.filter((c) => showColumnIdx.includes(c.dataIndex))"
         :data-source="data"
         :loading="loading"
-        size="small"
+        :size="tableSize.value"
         bordered
         canResize
         :pagination="false"
         :striped="true"
-      >
-        <!-- <template #toolbar>
-        </template> -->
-      </BasicTable>
+        :showIndexColumn="showIndexColumn"
+      />
 
+      <!-- 分页 -->
       <div class="flex justify-end mr-6">
         <Pagination
           :current="state.pageNo"

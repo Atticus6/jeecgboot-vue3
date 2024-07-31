@@ -176,3 +176,5 @@ VITE_GLOB_DOMAIN_URL=http://jeecg-boot-gateway:9999
 - productchildtypeid 产品类型
 - paymethodid 付款方式
 - tradetypeid 操作类型
+- operitemid 营业项目
+- acceptsheetstatusid 受理单状态

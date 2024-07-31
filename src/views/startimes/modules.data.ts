@@ -243,6 +243,34 @@ const selects = {
       },
     ] as SelectOption[],
   },
+  operitemid: {
+    name: '营业项目',
+    path: 'getDmActionType',
+  },
+  acceptsheetstatusid: {
+    name: '受理单状态',
+    path: null,
+    options: [
+      {
+        status: 1,
+        code: '0',
+        id: '0',
+        name: '未完工',
+      },
+      {
+        status: 1,
+        code: '1',
+        id: '1',
+        name: '已完工',
+      },
+      {
+        status: 1,
+        code: '2',
+        id: '2',
+        name: '已退单',
+      },
+    ] as SelectOption[],
+  },
 } as const;
 
 export type S = keyof typeof selects;
