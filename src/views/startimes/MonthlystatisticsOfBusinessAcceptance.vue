@@ -10,6 +10,30 @@
       label: '运营区域',
       tableNmae: 'utf8',
     },
+    {
+      reportId: '978509747451674624',
+      key: 'payment_month',
+      label: '统计月份',
+      tableNmae: 'utf8',
+    },
+    {
+      reportId: '978517356510527488',
+      key: 'operitemenamestr',
+      label: '营业项目',
+      tableNmae: 'utf8',
+    },
+    {
+      reportId: '978519916684328960',
+      key: 'salechannelnamestr',
+      label: '受理渠道',
+      tableNmae: 'utf8',
+    },
+    {
+      reportId: '978520871563771904',
+      key: 'businessnamestr',
+      label: '业务类型',
+      tableNmae: 'utf8',
+    },
   ];
 </script>
 

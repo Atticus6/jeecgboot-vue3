@@ -6,8 +6,10 @@
   import Bar from '/@/components/chart/Bar.vue';
   import Pie from '/@/components/chart/Pie.vue';
   import { useMediaQuery } from '@vueuse/core';
-  import { SettingOutlined, ColumnHeightOutlined } from '@ant-design/icons-vue';
+  import { SettingOutlined, ColumnHeightOutlined, PrinterOutlined } from '@ant-design/icons-vue';
   import { Pagination } from 'ant-design-vue';
+  import printJS from 'print-js';
+
   import { useSelectStore } from './store';
 
   type ReportType = {
@@ -218,6 +220,13 @@
     getData();
   };
 
+  function jsonPrint() {
+    printJS({
+      printable: data.value,
+      properties: showColumnIdx.value,
+      type: 'json',
+    });
+  }
   // select 搜索
   const filterOption = (input: string, option: any) => {
     return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0;
@@ -326,9 +335,14 @@
             </a-menu>
           </template>
         </a-dropdown>
+
+        <a-button type="ghost" shape="circle" size="small" @click="jsonPrint">
+          <PrinterOutlined />
+        </a-button>
       </div>
 
       <BasicTable
+        id="table"
         :columns="columns.filter((c) => showColumnIdx.includes(c.dataIndex))"
         :data-source="data"
         :loading="loading"
@@ -346,13 +360,14 @@
           :current="state.pageNo"
           :total="state.count"
           :page-size="state.pageSize"
-          how-quick-jumper
-          show-size-changer
+          :how-quick-jumper="true"
+          :show-size-changer="true"
           size="small"
           :show-total="(total) => `共${total} 条数据`"
           @change="paginationChange"
           :disabled="loading"
-      /></div>
+        />
+      </div>
     </Card>
 
     <!--  图区域 -->

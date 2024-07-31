@@ -245,7 +245,7 @@ const selects = {
   },
   operitemid: {
     name: '营业项目',
-    path: 'getDmActionType',
+    path: 'getDmAction',
   },
   acceptsheetstatusid: {
     name: '受理单状态',
@@ -270,6 +270,10 @@ const selects = {
         name: '已退单',
       },
     ] as SelectOption[],
+  },
+  operitemtypeid: {
+    name: '营业项目类型',
+    path: 'getDmActionType',
   },
 } as const;
 
