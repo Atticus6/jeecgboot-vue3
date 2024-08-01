@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import Page from './Page.vue';
+  import Page from './components/Page.vue';
 
   // 业务受理日统计
 
