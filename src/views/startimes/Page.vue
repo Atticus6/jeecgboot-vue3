@@ -80,7 +80,7 @@
   const data = computed(() => {
     console.log(' computed data');
 
-    if (items.value.length === 0) {
+    if (loading.value || items.value.length === 0) {
       return [];
     } else {
       const summary: any = { id: '-1' };
@@ -364,6 +364,7 @@
           :show-size-changer="true"
           size="small"
           :show-total="(total) => `共${total} 条数据`"
+          :page-size-options="['5', '10', '20', '30', '40', '50']"
           @change="paginationChange"
           :disabled="loading"
         />
