@@ -19,18 +19,20 @@
     tableNmae: string;
   };
 
-  const { reports, mapList, showColumnSetting, toFixedNum } = withDefaults(
+  const { reports, mapList, showColumnSetting, toFixedNum, showSum } = withDefaults(
     defineProps<{
       reports: ReportType[];
       mapList?: ('pie' | 'bar')[];
       showColumnSetting?: boolean;
       toFixedNum?: number;
+      showSum?: boolean;
     }>(),
     {
       // 展示的图标
       mapList: () => ['pie', 'bar'],
       showColumnSetting: true,
       toFixedNum: 0,
+      showSum: true,
     }
   );
 
@@ -88,7 +90,7 @@
       columns.value.forEach((c) => {
         if (c.dataIndex === report.value.key) {
           summary[c.dataIndex] = '合计';
-        } else {
+        } else if (showSum) {
           summary[c.dataIndex] = items.value
             .reduce(function (prev, cur) {
               const sum = (prev + parseFloat(cur[c.dataIndex])) as number;
@@ -103,7 +105,8 @@
         id: i.jimu_row_id,
       }));
 
-      target.push(summary);
+      if (showSum) target.push(summary);
+
       return target;
     }
   });
@@ -223,7 +226,7 @@
   function jsonPrint() {
     printJS({
       printable: data.value,
-      properties: showColumnIdx.value,
+      properties: columns.value.filter((c) => showColumnIdx.value.includes(c.dataIndex)).map((c) => ({ field: c.dataIndex, displayName: c.title })),
       type: 'json',
     });
   }

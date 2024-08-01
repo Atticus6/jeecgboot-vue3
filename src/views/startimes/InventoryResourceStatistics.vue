@@ -5,14 +5,14 @@
 
   const reports = [
     {
-      reportId: '976385364197195776',
-      key: 'operareanamestr',
-      label: '运营区域',
+      reportId: '978825898811539456',
+      key: 'stocknamestr',
+      label: '仓库名称',
       tableNmae: 'utf8',
     },
   ];
 </script>
 
 <template>
-  <Page :reports="reports" />
+  <Page :reports="reports" :mapList="[]" :showSum="false" />
 </template>

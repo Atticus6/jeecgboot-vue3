@@ -199,10 +199,6 @@ const selects = {
     name: '营销渠道',
     path: 'getDmSaleChannel',
   },
-  a: {
-    name: '资源类型',
-    path: 'getDmResourceType',
-  },
   productchildtypeid: {
     name: '产品类型',
     path: null,
@@ -274,6 +270,80 @@ const selects = {
   operitemtypeid: {
     name: '营业项目类型',
     path: 'getDmActionType',
+  },
+  stocknamestr: {
+    name: '仓库名称',
+    path: 'getDmStock',
+  },
+  stockstatusid: {
+    name: '库存状态',
+    path: null,
+    options: [
+      {
+        status: 1,
+        code: '1',
+        id: '1',
+        name: '在库',
+      },
+      {
+        status: 1,
+        code: '2',
+        id: '2',
+        name: '不在库',
+      },
+    ] as SelectOption[],
+  },
+  phyresourcestatusid: {
+    name: '资源状态',
+    path: null,
+    options: [
+      {
+        status: 1,
+        code: '1',
+        id: '1',
+        name: '可用',
+      },
+      {
+        status: 1,
+        code: '2',
+        id: '2',
+        name: '预占用',
+      },
+      {
+        status: 1,
+        code: '3',
+        id: '3',
+        name: '占用',
+      },
+      {
+        status: 1,
+        code: '4',
+        id: '4',
+        name: '维修',
+      },
+      {
+        status: 1,
+        code: '5',
+        id: '5',
+        name: '报废',
+      },
+      {
+        status: 1,
+        code: '6',
+        id: '6',
+        name: '退还供应商',
+      },
+      {
+        status: 1,
+        code: '7',
+        id: '7',
+        name: '未激活',
+      },
+    ] as SelectOption[],
+  },
+  resourcetypenamestr: {
+    name: '资源目录名称',
+    path: 'getDmResourceType',
   },
 } as const;
 
