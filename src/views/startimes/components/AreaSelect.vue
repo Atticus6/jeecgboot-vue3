@@ -1,8 +1,13 @@
 <script lang="ts" setup>
-  import { computed, onMounted, ref, watch, watchEffect } from 'vue';
+  import { computed, onMounted, ref, watchEffect } from 'vue';
   import { getValidAddresseTree } from './modules.data';
 
-  const selectedData = ref<any>({});
+  const list = ['city', 'area', 'street'] as const;
+  type A = (typeof list)[number];
+
+  const selectedData = ref<{
+    [K in (typeof list)[number]]?: string;
+  }>({});
   const addressData = ref<Awaited<ReturnType<typeof getValidAddresseTree>> | null>(null);
 
   const emit = defineEmits(['update:modelValue']);
@@ -21,7 +26,7 @@
   });
 
   const areaOptions = computed(() => {
-    if (selectedData.value['city'] && addressData.value?.children) {
+    if (selectedData.value.city && addressData.value?.children) {
       return addressData.value.children.map((a) => ({
         value: a.fullCode,
         label: a.fullName,
@@ -32,9 +37,9 @@
   });
 
   const streetOptions = computed(() => {
-    if (!selectedData.value['area'] || addressData.value === null) return [];
+    if (!selectedData.value.area || addressData.value === null) return [];
 
-    const area = addressData.value.children!.find((a) => a.fullCode === selectedData.value['area']);
+    const area = addressData.value.children!.find((a) => a.fullCode === selectedData.value.area);
 
     if (area && area.children) {
       return area.children.map((a) => ({
@@ -47,7 +52,7 @@
   });
 
   watchEffect(() => {
-    const res = selectedData.value['street'] || selectedData.value['area'] || selectedData.value['city'] || '';
+    const res = selectedData.value.street || selectedData.value.area || selectedData.value.city || '';
 
     emit('update:modelValue', res);
   });
@@ -68,7 +73,7 @@
       v-model:value="selectedData.city"
       class="flex-1"
       :options="cityOptions"
-      @change="delete selectedData['area']"
+      @change="delete selectedData.area"
       allowClear
       show-search
       :filter-option="filterOption"
@@ -77,7 +82,7 @@
       v-model:value="selectedData.area"
       class="flex-1"
       :options="areaOptions"
-      @change="delete selectedData['street']"
+      @change="delete selectedData.street"
       allowClear
       show-search
       :filter-option="filterOption"
