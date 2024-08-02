@@ -261,9 +261,10 @@
             class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-x-2 md:gap-x-4 lg:gap-x-6 gap-y-2"
             @submit="submit"
           >
-            <a-form-item v-for="(item, i) in inputItems" :key="i" :name="item.name" noStyle>
+            <a-form-item v-for="(item, i) in inputItems" :key="i" :name="item.name" noStyle class="col-span-2">
               <div class="flex items-center">
                 <div class="w-30 md:w-26">{{ item.title }}:</div>
+
                 <a-select
                   v-if="selectStore.getSelectBykey(item.name)"
                   v-model:value="formScheam[item.name]"
@@ -293,10 +294,10 @@
               </div>
             </a-form-item>
 
-            <!-- <div class="col-span-2 flex items-center">
+            <div class="col-span-2 flex items-center" v-if="inputItems.find((i) => i.name === 'addresscode')">
               <div class="w-20">地址编码:</div>
-              <AreaSelect />
-            </div> -->
+              <AreaSelect v-model="formScheam['addresscode']" />
+            </div>
 
             <a-form-item noStyle>
               <div class="flex items-center"> <a-button type="primary" html-type="submit">查询</a-button></div>

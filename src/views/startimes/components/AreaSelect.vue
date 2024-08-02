@@ -5,6 +5,8 @@
   const selectedData = ref<any>({});
   const addressData = ref<Awaited<ReturnType<typeof getValidAddresseTree>> | null>(null);
 
+  const emit = defineEmits(['update:modelValue']);
+
   const cityOptions = computed(() => {
     if (!addressData.value) {
       return [];
@@ -51,6 +53,10 @@
     if (!selectedData.value['area'] && selectedData.value['street']) {
       delete selectedData.value['street'];
     }
+
+    const res = selectedData.value['street'] || selectedData.value['area'] || selectedData.value['city'] || '';
+
+    emit('update:modelValue', res);
   });
 
   const filterOption = (input: string, option: any) => {
