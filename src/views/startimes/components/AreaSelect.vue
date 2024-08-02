@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { computed, onMounted, ref, watchEffect } from 'vue';
+  import { computed, onMounted, ref, watch, watchEffect } from 'vue';
   import { getValidAddresseTree } from './modules.data';
 
   const selectedData = ref<any>({});
@@ -47,13 +47,6 @@
   });
 
   watchEffect(() => {
-    if (!selectedData.value['city'] && selectedData.value['area']) {
-      delete selectedData.value['area'];
-    }
-    if (!selectedData.value['area'] && selectedData.value['street']) {
-      delete selectedData.value['street'];
-    }
-
     const res = selectedData.value['street'] || selectedData.value['area'] || selectedData.value['city'] || '';
 
     emit('update:modelValue', res);
@@ -71,9 +64,25 @@
 </script>
 <template>
   <div class="flex-grow flex justify-between gap-3">
-    <a-select v-model:value="selectedData.city" class="w-full" :options="cityOptions" allowClear show-search :filter-option="filterOption" />
-    <a-select v-model:value="selectedData.area" class="w-full" :options="areaOptions" allowClear show-search :filter-option="filterOption" />
-    <a-select v-model:value="selectedData.street" class="w-full" :options="streetOptions" allowClear show-search :filter-option="filterOption" />
+    <a-select
+      v-model:value="selectedData.city"
+      class="flex-1"
+      :options="cityOptions"
+      @change="delete selectedData['area']"
+      allowClear
+      show-search
+      :filter-option="filterOption"
+    />
+    <a-select
+      v-model:value="selectedData.area"
+      class="flex-1"
+      :options="areaOptions"
+      @change="delete selectedData['street']"
+      allowClear
+      show-search
+      :filter-option="filterOption"
+    />
+    <a-select v-model:value="selectedData.street" class="flex-1" :options="streetOptions" allowClear show-search :filter-option="filterOption" />
   </div>
 </template>
 <style scoped></style>

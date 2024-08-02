@@ -261,7 +261,7 @@
             class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-x-2 md:gap-x-4 lg:gap-x-6 gap-y-2"
             @submit="submit"
           >
-            <a-form-item v-for="(item, i) in inputItems" :key="i" :name="item.name" noStyle class="col-span-2">
+            <a-form-item v-for="(item, i) in inputItems.filter((i) => i.name !== 'addresscode')" :key="i" :name="item.name" noStyle>
               <div class="flex items-center">
                 <div class="w-30 md:w-26">{{ item.title }}:</div>
 
