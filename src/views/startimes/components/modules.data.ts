@@ -370,13 +370,10 @@ export function getSelectByKey(key: S) {
       key,
     });
   }
-  const token = getToken();
+
   return defHttp
     .get<SelectOption[]>({
       url: `/dm/api/${taget.path}`,
-      params: {
-        token,
-      },
     })
     .then((res) => {
       return {
@@ -385,4 +382,22 @@ export function getSelectByKey(key: S) {
         key,
       };
     });
+}
+
+type Address = {
+  id: number;
+  fullName: string;
+  fullCode: string;
+  addressLevel: {
+    id: number;
+    name: 'City' | 'Area' | 'Street';
+    layer: number;
+  };
+  children: Address[] | null;
+};
+
+export function getValidAddresseTree() {
+  return defHttp.get<Address>({
+    url: '/dm/api/getValidAddresseTree',
+  });
 }

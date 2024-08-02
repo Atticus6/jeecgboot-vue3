@@ -9,7 +9,7 @@
   import { SettingOutlined, ColumnHeightOutlined, PrinterOutlined } from '@ant-design/icons-vue';
   import { Pagination } from 'ant-design-vue';
   import printJS from 'print-js';
-
+  import AreaSelect from './AreaSelect.vue';
   import { useSelectStore } from './store';
 
   type ReportType = {
@@ -293,8 +293,13 @@
               </div>
             </a-form-item>
 
+            <!-- <div class="col-span-2 flex items-center">
+              <div class="w-20">地址编码:</div>
+              <AreaSelect />
+            </div> -->
+
             <a-form-item noStyle>
-              <div class="flex items-center"><a-button type="primary" html-type="submit">查询</a-button></div>
+              <div class="flex items-center"> <a-button type="primary" html-type="submit">查询</a-button></div>
             </a-form-item>
           </a-form>
         </div>
