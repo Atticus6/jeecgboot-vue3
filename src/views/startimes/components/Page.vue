@@ -245,7 +245,7 @@
   };
 
   const Divider: FunctionalComponent = (_props: any, ctx: any) => {
-    return <div class="font-medium text-md md:text-xl">{ctx.slots.default()}</div>;
+    return <div class="font-medium text-md md:text-xl mb-2">{ctx.slots.default()}</div>;
   };
 </script>
 <template>
@@ -366,6 +366,7 @@
       <!-- 分页 -->
       <div class="flex justify-end mr-6">
         <Pagination
+          class="flex gap-1"
           :current="state.pageNo"
           :total="state.count"
           :page-size="state.pageSize"
@@ -396,7 +397,7 @@
             ]"
           />
         </div>
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-1 md:gap-2 lg:gap-3">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-1 md:gap-3 lg:gap-5">
           <template v-if="showMaps.includes('bar')">
             <Card v-for="(d, i) in mapsData" :key="i">
               <Bar :chart-data="d.data" height="40vh" :option="{ title: { text: d.title, left: 'center' } }"

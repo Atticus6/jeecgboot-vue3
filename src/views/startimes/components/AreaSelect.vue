@@ -3,7 +3,6 @@
   import { getValidAddresseTree } from './modules.data';
 
   const list = ['city', 'area', 'street'] as const;
-  type A = (typeof list)[number];
 
   const selectedData = ref<{
     [K in (typeof list)[number]]?: string;

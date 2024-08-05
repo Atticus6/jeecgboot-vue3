@@ -69,7 +69,7 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       // Load proxy configuration from .env
       proxy: {
         ...createProxy(VITE_PROXY),
-        '/jeecg-boot': 'http://192.168.20.58:8080',
+        '/jeecg-boot': 'http://192.168.20.58:8086',
       },
     },
     build: {
