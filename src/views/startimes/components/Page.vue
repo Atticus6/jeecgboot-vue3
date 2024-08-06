@@ -48,7 +48,7 @@
   const isPC = useMediaQuery('(min-width: 768px)');
   const report = ref<ReportType>(reports[0]);
   const selectStore = useSelectStore();
-
+  const rootDiv = ref<HTMLDivElement>(null);
   // 表格的每条记录
   const items = ref<any[]>([]);
   // 表单项
@@ -197,7 +197,9 @@
   };
 
   onMounted(() => {
-    getData();
+    getData().then(() => {
+      // rootDiv.value!.scrollTop = 0;
+    });
   });
 
   function submit() {
@@ -249,7 +251,7 @@
   };
 </script>
 <template>
-  <div class="min-h-screen bg-gray-100 dark:bg-gray-900 p-1 md:p-2 lg:p-3 flex flex-col gap-2 mt-1">
+  <div class="min-h-screen bg-gray-100 dark:bg-gray-900 p-1 md:p-2 lg:p-3 flex flex-col gap-2 mt-1" ref="rootDiv">
     <!-- 表单区域 -->
     <Card class="px-2 py-1 md:px-4 md:py-2">
       <div class="flex flex-col gap-1 md:gap-2 lg:gap-4">
