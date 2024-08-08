@@ -74,6 +74,7 @@
   import { listNoCareTenant, deleteUser, batchDeleteUser, getImportUrl, getExportUrl, frozenBatch } from './user.api';
   import { usePermission } from '/@/hooks/web/usePermission';
   import { defHttp } from '/@/utils/http/axios';
+  import { message } from 'ant-design-vue';
 
   const { createMessage, createConfirm } = useMessage();
   const { isDisabledAuth } = usePermission();
@@ -300,12 +301,17 @@
     openQuitAgentModal(true, { userName });
   }
 
-  const syncOper = () => {
-    defHttp
+  const syncOper = async () => {
+    const key = 'syncOper';
+    message.loading({ content: '同步中', key });
+    await defHttp
       .get({
         url: '/dm/api/syncOper',
       })
       .finally(() => {
+        setTimeout(() => {
+          message.success({ content: '同步成功,默认密码为123456', key, duration: 3 });
+        }, 1000);
         reload();
       });
   };

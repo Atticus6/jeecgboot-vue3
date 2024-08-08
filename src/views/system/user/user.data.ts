@@ -176,9 +176,9 @@ export const formSchema: FormSchema[] = [
   {
     label: '工号',
     field: 'workNo',
-    required: true,
+    // required: true,
     component: 'Input',
-    dynamicRules: ({ model, schema }) => rules.duplicateCheckRule('sys_user', 'work_no', model, schema, true),
+    // dynamicRules: ({ model, schema }) => rules.duplicateCheckRule('sys_user', 'work_no', model, schema, true),
   },
   {
     label: '职务',
