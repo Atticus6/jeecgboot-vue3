@@ -163,7 +163,7 @@ const selects = {
   },
   operareaid: {
     name: '运营区域',
-    path: 'getDmSaleArea',
+    path: 'querySaleAreaByOperator',
   },
   rateclassid: {
     name: '账目类型',
@@ -229,13 +229,13 @@ const selects = {
         status: 1,
         code: '0',
         id: '0',
-        name: '付费',
+        name: '缴费',
       },
       {
         status: 1,
         code: '1',
         id: '1',
-        name: '收费',
+        name: '退费',
       },
     ] as SelectOption[],
   },
@@ -344,6 +344,34 @@ const selects = {
   resourcetypenamestr: {
     name: '资源目录名称',
     path: 'getDmResourceType',
+  },
+  customerstatusid: {
+    name: '客户状态',
+    path: null,
+    options: [
+      {
+        status: 1,
+        code: '0',
+        id: '0',
+        name: '潜在',
+      },
+      {
+        status: 1,
+        code: '1',
+        id: '1',
+        name: '现有',
+      },
+      {
+        status: 1,
+        code: '2',
+        id: '2',
+        name: '注销',
+      },
+    ] as SelectOption[],
+  },
+  thirdnamestr: {
+    name: '供应商',
+    path: 'getThird',
   },
 } as const;
 

@@ -1,6 +1,10 @@
 <script lang="ts" setup>
   import Page from './components/Page.vue';
-
+  import { ref } from 'vue';
+  import { getLastMonth } from './utils';
+  const defalutSchema = ref({
+    cycleStartDate: getLastMonth(),
+  });
   const reports = [
     {
       reportId: '977775105450786816',
@@ -9,8 +13,9 @@
       tableNmae: 'realIncomeReport',
     },
   ];
+  const timeKeys = ['cycleStartDate', 'cycleEndDate'];
 </script>
 
 <template>
-  <Page :reports="reports" :showColumnSetting="false" :toFixedNum="2" />
+  <Page :reports="reports" :showColumnSetting="false" :toFixedNum="2" :timeKeys="timeKeys" :defalutSchema="defalutSchema" />
 </template>

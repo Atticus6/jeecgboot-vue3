@@ -1,6 +1,7 @@
 <script lang="ts" setup>
   import Page from './components/Page.vue';
-
+  import { ref } from 'vue';
+  import { getYesterday } from './utils';
   // 业务受理日统计
 
   const reports = [
@@ -41,8 +42,15 @@
       tableNmae: 'utf8',
     },
   ];
+
+  const timeKeys = ['acceptStartDate', 'acceptEndDate'];
+  const defaultSchema = ref({
+    acceptStartDate: getYesterday(),
+  });
+
+  console.log(defaultSchema.value.acceptStartDate);
 </script>
 
 <template>
-  <Page :reports="reports" />
+  <Page :reports="reports" :timeKeys="timeKeys" :defaultSchema="defaultSchema" />
 </template>

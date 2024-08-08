@@ -11,6 +11,7 @@
   import printJS from 'print-js';
   import AreaSelect from './AreaSelect.vue';
   import { useSelectStore } from './store';
+  import dayjs, { Dayjs } from 'dayjs';
 
   type ReportType = {
     reportId: string;
@@ -19,13 +20,15 @@
     tableNmae: string;
   };
 
-  const { reports, mapList, showColumnSetting, toFixedNum, showSum } = withDefaults(
+  const { reports, mapList, showColumnSetting, toFixedNum, showSum, defalutSchema, timeKeys } = withDefaults(
     defineProps<{
       reports: ReportType[];
       mapList?: ('pie' | 'bar')[];
       showColumnSetting?: boolean;
       toFixedNum?: number;
       showSum?: boolean;
+      defalutSchema?: any;
+      timeKeys?: string[];
     }>(),
     {
       // 展示的图标
@@ -33,6 +36,8 @@
       showColumnSetting: true,
       toFixedNum: 0,
       showSum: true,
+      defalutSchema: {},
+      timeKeys: () => [],
     }
   );
 
@@ -67,7 +72,7 @@
   });
 
   // 查询条件
-  const formScheam = reactive<any>({});
+  const formScheam = reactive<any>({ ...defalutSchema });
 
   // 去除重复的
   const showMaps = ref(lodash.uniq(mapList));
@@ -181,7 +186,7 @@
     loading.value = true;
     await Promise.all([
       // 获取表格数据
-      show(report.value.reportId, state.value).then((res) => {
+      show(report.value.reportId, { ...state.value, ...formScheam }).then((res) => {
         state.value.total = res.dataList[report.value.tableNmae].total;
         state.value.count = res.dataList[report.value.tableNmae].count;
 
@@ -205,15 +210,15 @@
   function submit() {
     console.log('submit');
 
-    inputItems.value.forEach((i) => {
-      const k = i.name;
-      const v = formScheam[k];
-      if (v) {
-        state.value[k] = v;
-      } else {
-        delete state.value[k];
-      }
-    });
+    // inputItems.value.forEach((i) => {
+    //   const k = i.name;
+    //   const v = formScheam[k];
+    //   if (v) {
+    //     state.value[k] = v;
+    //   } else {
+    //     delete state.value[k];
+    //   }
+    // });
 
     getData(false);
   }
@@ -236,6 +241,40 @@
   const filterOption = (input: string, option: any) => {
     return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0;
   };
+
+  const disabledDates = computed(() => {
+    const obj = {} as any;
+
+    timeKeys.forEach((t, i) => {
+      if (i === 0) {
+        obj[t] = (current: Dayjs) => {
+          const endkey = timeKeys[1];
+          if (endkey) {
+            const endTime = formScheam[endkey];
+            if (endTime) {
+              return (current && current > dayjs().endOf('day')) || current > dayjs(endTime).endOf('day');
+            } else {
+              return current && current > dayjs().endOf('day');
+            }
+          }
+
+          return current && current > dayjs().endOf('day');
+        };
+      } else if (i === 1) {
+        obj[t] = (current: Dayjs) => {
+          const startTime = formScheam[timeKeys[0]];
+
+          if (startTime) {
+            return (current && current > dayjs().endOf('day')) || current < dayjs(startTime).endOf('day');
+          } else {
+            return current && current > dayjs().endOf('day');
+          }
+        };
+      }
+    });
+
+    return obj;
+  });
 
   //   部分组件
   const Card: FunctionalComponent = (_props: any, ctx: any) => {
@@ -288,6 +327,7 @@
                   v-else-if="item.type === 'date'"
                   v-model:value="formScheam[item.name]"
                   class="w-full"
+                  :disabled-date="disabledDates[item.name]"
                   allowClear
                   :valueFormat="item.format || 'YYYY-MM-DD'"
                   :picker="item.realType === 'datetime' ? 'date' : item.realType"

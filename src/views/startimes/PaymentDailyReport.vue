@@ -1,5 +1,7 @@
 <script lang="ts" setup>
   import Page from './components/Page.vue';
+  import { getYesterday } from './utils';
+  import { ref } from 'vue';
 
   // 缴费日报表
   const reports = [
@@ -16,8 +18,14 @@
       tableNmae: 'utf8',
     },
   ];
+
+  const defalutSchema = ref({
+    payStartDate: getYesterday(),
+  });
+
+  const timeKeys = ['payStartDate', 'payEndDate'];
 </script>
 
 <template>
-  <Page :reports="reports" />
+  <Page :reports="reports" :to-fixed-num="2" :defalutSchema="defalutSchema" :timeKeys="timeKeys" />
 </template>

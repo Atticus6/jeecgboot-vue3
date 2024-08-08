@@ -1,6 +1,10 @@
 <script lang="ts" setup>
   import Page from './components/Page.vue';
-
+  import { ref } from 'vue';
+  import { getLastMonth } from './utils';
+  const defalutSchema = ref({
+    startcomedt: getLastMonth(),
+  });
   // 库存资源统计
 
   const reports = [
@@ -11,8 +15,10 @@
       tableNmae: 'utf8',
     },
   ];
+
+  const timeKeys = ['startcomedt', 'endcomedt'];
 </script>
 
 <template>
-  <Page :reports="reports" :mapList="[]" :showSum="false" />
+  <Page :reports="reports" :mapList="[]" :showSum="false" :timeKeys="timeKeys" :defalutSchema="defalutSchema" />
 </template>

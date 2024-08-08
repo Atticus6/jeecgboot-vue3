@@ -1,6 +1,7 @@
 <script lang="ts" setup>
   import Page from './components/Page.vue';
-
+  import { getLastMonth } from './utils';
+  import { ref } from 'vue';
   // 缴费月报表
   const reports = [
     {
@@ -16,8 +17,14 @@
       tableNmae: 'utf8',
     },
   ];
+
+  const timeKeys = ['payStartDate', 'payEndDate'];
+
+  const defalutSchema = ref({
+    payStartDate: getLastMonth(),
+  });
 </script>
 
 <template>
-  <Page :reports="reports" />
+  <Page :reports="reports" :to-fixed-num="2" :defalutSchema="defalutSchema" :timeKeys="timeKeys" />
 </template>

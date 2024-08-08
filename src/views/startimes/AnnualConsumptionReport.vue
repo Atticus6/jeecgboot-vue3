@@ -9,8 +9,10 @@
       tableNmae: 'annualConsumptionReport',
     },
   ];
+
+  const timeKeys = ['statisticalyear'];
 </script>
 
 <template>
-  <Page :reports="reports" :showColumnSetting="false" :toFixedNum="2" />
+  <Page :reports="reports" :showColumnSetting="false" :toFixedNum="2" :timeKeys="timeKeys" />
 </template>

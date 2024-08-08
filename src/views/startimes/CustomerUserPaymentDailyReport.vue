@@ -1,6 +1,10 @@
 <script lang="ts" setup>
   import Page from './components/Page.vue';
-
+  import { ref } from 'vue';
+  import { getYesterday } from './utils';
+  const defalutSchema = ref({
+    payStartDate: getYesterday(),
+  });
   // 客户用户缴费日报表
   const reports = [
     {
@@ -16,8 +20,10 @@
       tableNmae: 'utf8',
     },
   ];
+
+  const timeKeys = ['payStartDate', 'payEndDate'];
 </script>
 
 <template>
-  <Page :reports="reports" />
+  <Page :reports="reports" :timeKeys="timeKeys" :defalutSchema="defalutSchema" />
 </template>

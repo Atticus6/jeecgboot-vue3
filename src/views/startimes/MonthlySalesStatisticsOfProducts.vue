@@ -1,6 +1,10 @@
 <script lang="ts" setup>
   import Page from './components/Page.vue';
-
+  import { ref } from 'vue';
+  import { getLastMonth } from './utils';
+  const defalutSchema = ref({
+    startDate: getLastMonth(),
+  });
   // 产品销售月统计
 
   const reports = [
@@ -29,8 +33,10 @@
       tableNmae: 'utf8',
     },
   ];
+
+  const timeKeys = ['startDate', 'endDate'];
 </script>
 
 <template>
-  <Page :reports="reports" :to-fixed-num="2" />
+  <Page :reports="reports" :to-fixed-num="2" :timeKeys="timeKeys" :defalutSchema="defalutSchema" />
 </template>

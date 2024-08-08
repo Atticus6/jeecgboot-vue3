@@ -1,6 +1,10 @@
 <script lang="ts" setup>
   import Page from './components/Page.vue';
-
+  import { ref } from 'vue';
+  import { getYesterday } from './utils';
+  const defalutSchema = ref({
+    createstartdt: getYesterday(),
+  });
   const reports = [
     {
       reportId: '976366834009587712',
@@ -24,8 +28,10 @@
       tableNmae: 'utf8',
     },
   ];
+
+  const timeKeys = ['createstartdt', 'createenddt'];
 </script>
 
 <template>
-  <Page :reports="reports" />
+  <Page :reports="reports" :timeKeys="timeKeys" :defalutSchema="defalutSchema" />
 </template>
