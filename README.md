@@ -178,3 +178,6 @@ VITE_GLOB_DOMAIN_URL=http://jeecg-boot-gateway:9999
 - tradetypeid 操作类型
 - operitemid 营业项目
 - acceptsheetstatusid 受理单状态
+
+- 超级管理员super_admin super_admin123
+- 管理员admin admin
