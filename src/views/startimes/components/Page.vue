@@ -20,7 +20,7 @@
     tableNmae: string;
   };
 
-  const { reports, mapList, showColumnSetting, toFixedNum, showSum, defalutSchema, timeKeys } = withDefaults(
+  const { reports, mapList, showColumnSetting, toFixedNum, showSum, defalutSchema, timeKeys, handleData } = withDefaults(
     defineProps<{
       reports: ReportType[];
       mapList?: ('pie' | 'bar')[];
@@ -29,6 +29,8 @@
       showSum?: boolean;
       defalutSchema?: any;
       timeKeys?: string[];
+      // 对返回的结果进进行处理函数
+      handleData?: <T = any>(data: T) => T;
     }>(),
     {
       // 展示的图标
@@ -38,6 +40,7 @@
       showSum: true,
       defalutSchema: {},
       timeKeys: () => [],
+      handleData: (data: any) => data,
     }
   );
 
@@ -190,7 +193,7 @@
         state.value.total = res.dataList[report.value.tableNmae].total;
         state.value.count = res.dataList[report.value.tableNmae].count;
 
-        items.value = res.dataList[report.value.tableNmae].list;
+        items.value = handleData(res.dataList[report.value.tableNmae].list);
       }),
       // 获取表头
       loaddColumnsAndForm && getClounmn(),
@@ -202,9 +205,7 @@
   };
 
   onMounted(() => {
-    getData().then(() => {
-      // rootDiv.value!.scrollTop = 0;
-    });
+    getData();
   });
 
   function submit() {
@@ -336,10 +337,17 @@
               </div>
             </a-form-item>
 
-            <div class="col-span-2 flex items-center" v-if="inputItems.find((i) => i.name === 'addresscode')">
+            <a-form-item class="flex items-center" v-if="inputItems.find((i) => i.name === 'addresscode')" noStyle>
+              <div class="flex items-center">
+                <div class="w-30 md:w-26">地址编码:</div>
+                <AreaSelect v-model="formScheam['addresscode']" />
+              </div>
+            </a-form-item>
+
+            <!-- <div class="flex items-center" v-if="inputItems.find((i) => i.name === 'addresscode')">
               <div class="w-20">地址编码:</div>
               <AreaSelect v-model="formScheam['addresscode']" />
-            </div>
+            </div> -->
 
             <a-form-item noStyle>
               <div class="flex items-center"> <a-button type="primary" html-type="submit">查询</a-button></div>

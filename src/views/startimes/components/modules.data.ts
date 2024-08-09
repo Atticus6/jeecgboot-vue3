@@ -412,7 +412,7 @@ export function getSelectByKey(key: S) {
     });
 }
 
-type Address = {
+export type Address = {
   id: number;
   fullName: string;
   fullCode: string;

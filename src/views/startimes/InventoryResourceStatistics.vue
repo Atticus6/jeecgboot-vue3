@@ -1,9 +1,9 @@
 <script lang="ts" setup>
   import Page from './components/Page.vue';
   import { ref } from 'vue';
-  import { getLastMonth } from './utils';
+  import { getThisMonth } from './utils';
   const defalutSchema = ref({
-    startcomedt: getLastMonth(),
+    startcomedt: getThisMonth(),
   });
   // 库存资源统计
 

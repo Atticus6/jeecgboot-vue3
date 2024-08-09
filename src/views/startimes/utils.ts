@@ -18,6 +18,18 @@ export const getLastMonth = () => {
   return `${lastMonthYear}-${String(lastMonthMonth + 1).padStart(2, '0')}`;
 };
 
+export const getThisMonth = () => {
+  // 获取当前日期
+  const currentDate = new Date();
+
+  // 计算上个月的年月
+  const y = currentDate.getFullYear();
+  const m = currentDate.getMonth();
+
+  // 输出结果
+  return `${y}-${String(m + 1).padStart(2, '0')}`;
+};
+
 export const getYesterday = () => {
   // 获取当前日期
   const currentDate = new Date();
