@@ -133,7 +133,7 @@ export function getFormItems(reportId: string) {
   });
 }
 
-const selects = {
+export const selects = {
   businessid: {
     name: '业务类型',
     path: 'getDmBusinessType',

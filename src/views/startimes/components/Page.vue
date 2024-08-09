@@ -30,7 +30,7 @@
       defalutSchema?: any;
       timeKeys?: string[];
       // 对返回的结果进进行处理函数
-      handleData?: <T = any>(data: T) => T;
+      handleData?: (data: any) => any;
     }>(),
     {
       // 展示的图标
