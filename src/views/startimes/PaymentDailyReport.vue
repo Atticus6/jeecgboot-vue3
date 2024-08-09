@@ -1,6 +1,6 @@
 <script lang="ts" setup>
   import Page from './components/Page.vue';
-  import { getYesterday } from './utils';
+  import { getYesterday, getToday } from './utils';
   import { ref } from 'vue';
 
   // 缴费日报表
@@ -21,6 +21,7 @@
 
   const defalutSchema = ref({
     payStartDate: getYesterday(),
+    payEndDate: getToday(),
   });
 
   const timeKeys = ['payStartDate', 'payEndDate'];

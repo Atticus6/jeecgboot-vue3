@@ -1,9 +1,10 @@
 <script lang="ts" setup>
   import Page from './components/Page.vue';
   import { ref } from 'vue';
-  import { getYesterday } from './utils';
+  import { getYesterday, getToday } from './utils';
   const defalutSchema = ref({
     startDate: getYesterday(),
+    endDate: getToday(),
   });
   // 产品销售日统计
 

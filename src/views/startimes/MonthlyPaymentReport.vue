@@ -1,6 +1,6 @@
 <script lang="ts" setup>
   import Page from './components/Page.vue';
-  import { getLastMonth } from './utils';
+  import { getLastMonth, getThisMonth } from './utils';
   import { ref } from 'vue';
   // 缴费月报表
   const reports = [
@@ -22,6 +22,7 @@
 
   const defalutSchema = ref({
     payStartDate: getLastMonth(),
+    payEndDate: getThisMonth(),
   });
 </script>
 

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
   import Page from './components/Page.vue';
   import { ref } from 'vue';
-  import { getLastMonth } from './utils';
+  import { getLastMonth, getThisMonth } from './utils';
   // 业务受理月统计
 
   const reports = [
@@ -40,6 +40,7 @@
   const timeKeys = ['acceptStartDate', 'acceptEndDate'];
   const defaultSchema = ref({
     acceptStartDate: getLastMonth(),
+    acceptEndDate: getThisMonth(),
   });
 </script>
 

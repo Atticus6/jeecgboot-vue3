@@ -1,7 +1,7 @@
 <script lang="ts" setup>
   import Page from './components/Page.vue';
   import { ref } from 'vue';
-  import { getYesterday } from './utils';
+  import { getYesterday, getToday } from './utils';
   const reports = [
     {
       reportId: '976385364197195776',
@@ -19,6 +19,7 @@
   const timeKeys = ['createstartdt', 'createenddt'];
   const defalutSchema = ref({
     createstartdt: getYesterday(),
+    createenddt: getToday(),
   });
   console.log(defalutSchema);
 </script>

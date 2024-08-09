@@ -4,6 +4,7 @@
   import { getThisMonth } from './utils';
   const defalutSchema = ref({
     startcomedt: getThisMonth(),
+    endcomedt: getThisMonth(),
   });
   // 库存资源统计
 

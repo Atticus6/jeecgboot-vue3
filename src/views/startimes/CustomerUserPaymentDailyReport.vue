@@ -1,9 +1,10 @@
 <script lang="ts" setup>
   import Page from './components/Page.vue';
   import { ref } from 'vue';
-  import { getYesterday } from './utils';
+  import { getYesterday, getToday } from './utils';
   const defalutSchema = ref({
     payStartDate: getYesterday(),
+    payEndDate: getToday(),
   });
   // 客户用户缴费日报表
   const reports = [

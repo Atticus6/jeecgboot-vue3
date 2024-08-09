@@ -1,9 +1,10 @@
 <script lang="ts" setup>
   import Page from './components/Page.vue';
   import { ref } from 'vue';
-  import { getLastMonth } from './utils';
+  import { getLastMonth, getThisMonth } from './utils';
   const defalutSchema = ref({
     cycleStartDate: getLastMonth(),
+    cycleEndDate: getThisMonth(),
   });
   const reports = [
     {
