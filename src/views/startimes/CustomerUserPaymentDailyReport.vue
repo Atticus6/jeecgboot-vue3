@@ -23,8 +23,17 @@
   ];
 
   const timeKeys = ['payStartDate', 'payEndDate'];
+
+  const sortFn = (data: any[], reportKey: string) => {
+    if (reportKey === 'payment_day') {
+      data.sort((a, b) => b.payment_day.localeCompare(a.payment_day));
+      return data;
+    } else {
+      return data;
+    }
+  };
 </script>
 
 <template>
-  <Page :reports="reports" :timeKeys="timeKeys" :defalutSchema="defalutSchema" />
+  <Page :reports="reports" :timeKeys="timeKeys" :defalutSchema="defalutSchema" :sortFn="sortFn" />
 </template>

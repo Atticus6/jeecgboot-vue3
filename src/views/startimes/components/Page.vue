@@ -20,7 +20,7 @@
     tableNmae: string;
   };
 
-  const { reports, mapList, showColumnSetting, toFixedNum, showSum, defalutSchema, timeKeys, handleData } = withDefaults(
+  const { reports, mapList, showColumnSetting, toFixedNum, showSum, defalutSchema, timeKeys, handleData, sortFn } = withDefaults(
     defineProps<{
       reports: ReportType[];
       mapList?: ('pie' | 'bar')[];
@@ -31,6 +31,8 @@
       timeKeys?: string[];
       // 对返回的结果进进行处理函数
       handleData?: (data: any) => any;
+      summaryFn?: (data: any, reportKey: string) => any;
+      sortFn?: (data: any, reportKey: string) => any;
     }>(),
     {
       // 展示的图标
@@ -92,27 +94,37 @@
     if (loading.value || items.value.length === 0) {
       return [];
     } else {
-      const summary: any = { id: '-1' };
+      const defaultSumFn = () => {
+        const summary: any = { id: '-1' };
 
-      columns.value.forEach((c) => {
-        if (c.dataIndex === report.value.key) {
-          summary[c.dataIndex] = '合计';
-        } else if (showSum) {
-          summary[c.dataIndex] = items.value
-            .reduce(function (prev, cur) {
-              const sum = (prev + parseFloat(cur[c.dataIndex])) as number;
-              return sum;
-            }, 0)
-            .toFixed(toFixedNum);
-        }
-      });
+        columns.value.forEach((c) => {
+          if (c.dataIndex === report.value.key) {
+            summary[c.dataIndex] = '合计';
+          } else if (showSum) {
+            summary[c.dataIndex] = items.value
+              .reduce(function (prev, cur) {
+                const sum = (prev + parseFloat(cur[c.dataIndex])) as number;
+                return sum;
+              }, 0)
+              .toFixed(toFixedNum);
+          }
+        });
 
-      const target = items.value.map((i) => ({
+        return summary;
+      };
+
+      let temp = items.value;
+
+      if (sortFn) {
+        temp = sortFn(temp, report.value.key);
+      }
+
+      const target = temp.map((i) => ({
         ...i,
         id: i.jimu_row_id,
       }));
 
-      if (showSum) target.push(summary);
+      if (showSum) target.push(defaultSumFn());
 
       return target;
     }

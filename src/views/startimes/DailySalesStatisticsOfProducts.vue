@@ -36,8 +36,19 @@
   ];
 
   const timeKeys = ['startDate', 'endDate'];
+
+  const handleData = (data: any[]) => {
+    console.log(data);
+
+    return data.map((d) => {
+      return {
+        ...d,
+        sum_factfee: Number(d.sum_factfee).toFixed(2),
+      };
+    });
+  };
 </script>
 
 <template>
-  <Page :reports="reports" :to-fixed-num="2" :timeKeys="timeKeys" :defalutSchema="defalutSchema" />
+  <Page :reports="reports" :to-fixed-num="2" :timeKeys="timeKeys" :defalutSchema="defalutSchema" :handleData="handleData" />
 </template>

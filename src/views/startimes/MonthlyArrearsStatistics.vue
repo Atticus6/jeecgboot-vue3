@@ -16,9 +16,20 @@
     },
   ];
 
+  const handleData = (data: any[]) => {
+    console.log(data);
+
+    return data.map((d) => {
+      return {
+        ...d,
+        summoney: Number(d.summoney).toFixed(2),
+      };
+    });
+  };
+
   const timeKeys = ['cycleStartDate', 'cycleEndDate'];
 </script>
 
 <template>
-  <Page :reports="reports" :to-fixed-num="2" :showColumnSetting="false" :timeKeys :defalutSchema="defalutSchema" />
+  <Page :reports="reports" :to-fixed-num="2" :showColumnSetting="false" :timeKeys :defalutSchema="defalutSchema" :handleData="handleData" />
 </template>

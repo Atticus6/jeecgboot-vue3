@@ -24,8 +24,29 @@
     payStartDate: getLastMonth(),
     payEndDate: getThisMonth(),
   });
+
+  const handleData = (data: any[]) => {
+    console.log(data);
+
+    return data.map((d) => {
+      return {
+        ...d,
+        totalpay: Number(d.totalpay).toFixed(2),
+        totalrefund: Math.abs(d.totalrefund).toFixed(2),
+      };
+    });
+  };
+
+  const sortFn = (data: any[], reportKey: string) => {
+    if (reportKey === 'payment_month') {
+      data.sort((a, b) => b.payment_month.localeCompare(a.payment_month));
+      return data;
+    } else {
+      return data;
+    }
+  };
 </script>
 
 <template>
-  <Page :reports="reports" :to-fixed-num="2" :defalutSchema="defalutSchema" :timeKeys="timeKeys" />
+  <Page :reports="reports" :to-fixed-num="2" :defalutSchema="defalutSchema" :timeKeys="timeKeys" :handleData="handleData" :sortFn="sortFn" />
 </template>

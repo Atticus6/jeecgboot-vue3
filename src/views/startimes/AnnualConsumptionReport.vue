@@ -16,8 +16,18 @@
   ];
 
   const timeKeys = ['statisticalyear'];
+  const handleData = (data: any[]) => {
+    console.log(data);
+
+    return data.map((d) => {
+      return {
+        ...d,
+        summoney: Number(d.summoney).toFixed(2),
+      };
+    });
+  };
 </script>
 
 <template>
-  <Page :reports="reports" :showColumnSetting="false" :toFixedNum="2" :timeKeys="timeKeys" :defalutSchema="defaultSchema" />
+  <Page :reports="reports" :showColumnSetting="false" :toFixedNum="2" :timeKeys="timeKeys" :defalutSchema="defaultSchema" :handleData="handleData" />
 </template>
