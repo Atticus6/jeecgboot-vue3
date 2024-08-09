@@ -5,6 +5,8 @@
   import { defineComponent, PropType, ref, Ref, watchEffect, reactive, watch } from 'vue';
   import { useECharts } from '/@/hooks/web/useECharts';
   import { cloneDeep } from 'lodash-es';
+  import { colors } from './colors';
+
   export default defineComponent({
     name: 'Pie',
     props: {
@@ -48,6 +50,13 @@
               show: true,
               formatter: '{b} \n ({d}%)',
               color: '#B1B9D3',
+            },
+            itemStyle: {
+              color: function (params) {
+                console.log(params.dataIndex);
+
+                return colors[params.dataIndex % colors.length];
+              },
             },
           },
         ],

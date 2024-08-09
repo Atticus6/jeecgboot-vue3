@@ -5,6 +5,8 @@
   import { defineComponent, PropType, ref, Ref, reactive, watchEffect } from 'vue';
   import { useECharts } from '/@/hooks/web/useECharts';
   import { cloneDeep } from 'lodash-es';
+  import { colors } from './colors';
+
   export default defineComponent({
     name: 'bar',
     props: {
@@ -58,6 +60,13 @@
             type: 'bar',
             data: [],
             color: props.seriesColor,
+            itemStyle: {
+              color: function (params) {
+                console.log(params.dataIndex);
+
+                return colors[params.dataIndex % colors.length];
+              },
+            },
           },
         ],
       });

@@ -52,6 +52,7 @@
     tree-default-expand-all
     :tree-data="treeData"
     tree-node-filter-prop="label"
+    :treeLine="true"
   >
     <template #title="{ value: val, label }">
       <b v-if="val === 'parent 1-1'" style="color: #08c">sss</b>
