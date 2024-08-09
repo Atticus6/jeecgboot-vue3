@@ -1,5 +1,5 @@
 <script lang="tsx" setup>
-  import { computed, FunctionalComponent, onMounted, reactive, ref, defineProps } from 'vue';
+  import { computed, FunctionalComponent, onMounted, ref, defineProps } from 'vue';
   import { show, getColumnsByReportId, getFormItems, InputItem, BasicColumn, excludeIndex, getSelectByKey, S } from './modules.data';
   import { BasicTable } from '/@/components/Table';
   import lodash from 'lodash-es';
@@ -56,7 +56,6 @@
   const isPC = useMediaQuery('(min-width: 768px)');
   const report = ref<ReportType>(reports[0]);
   const selectStore = useSelectStore();
-  const rootDiv = ref<HTMLDivElement>(null);
   // 表格的每条记录
   const items = ref<any[]>([]);
   // 表单项
@@ -75,7 +74,7 @@
   });
 
   // 查询条件
-  const formScheam = reactive<any>({ ...defalutSchema });
+  const formScheam = ref<any>({ ...defalutSchema });
 
   // 去除重复的
   const showMaps = ref(lodash.uniq(mapList));
@@ -84,7 +83,7 @@
     state.value.pageNo = page;
     state.value.pageSize = pageSize;
     // false 不需要重新获取表单和表头
-    getData(false);
+    getData({ data: true });
   };
 
   const data = computed(() => {
@@ -132,7 +131,7 @@
       }));
   });
 
-  const getData = async (loaddColumnsAndForm = true) => {
+  const getData = async ({ head = false, form = false, data = false }) => {
     console.log('getData');
 
     if (loading.value) {
@@ -189,23 +188,24 @@
     loading.value = true;
     await Promise.all([
       // 获取表格数据
-      show(report.value.reportId, { ...state.value, ...formScheam }).then((res) => {
-        state.value.total = res.dataList[report.value.tableNmae].total;
-        state.value.count = res.dataList[report.value.tableNmae].count;
+      data &&
+        show(report.value.reportId, { ...state.value, ...formScheam.value }).then((res) => {
+          state.value.total = res.dataList[report.value.tableNmae].total;
+          state.value.count = res.dataList[report.value.tableNmae].count;
 
-        items.value = handleData(res.dataList[report.value.tableNmae].list);
-      }),
+          items.value = handleData(res.dataList[report.value.tableNmae].list);
+        }),
       // 获取表头
-      loaddColumnsAndForm && getClounmn(),
+      head && getClounmn(),
       // 获取表单项
-      loaddColumnsAndForm && getFormData(),
+      form && getFormData(),
     ]).finally(() => {
       loading.value = false;
     });
   };
 
   onMounted(() => {
-    getData();
+    getData({ form: true, head: true });
   });
 
   function submit() {
@@ -221,14 +221,18 @@
     //   }
     // });
 
-    getData(false);
+    getData({ data: true });
+  }
+
+  function clear() {
+    formScheam.value = {};
   }
 
   const reportChange = (r: ReportType) => {
     console.log('reportChange');
 
     report.value = r;
-    getData();
+    getData({ data: true, form: true, head: true });
   };
 
   function jsonPrint() {
@@ -251,7 +255,7 @@
         obj[t] = (current: Dayjs) => {
           const endkey = timeKeys[1];
           if (endkey) {
-            const endTime = formScheam[endkey];
+            const endTime = formScheam.value[endkey];
             if (endTime) {
               return (current && current > dayjs().endOf('day')) || current > dayjs(endTime).endOf('day');
             } else {
@@ -263,7 +267,7 @@
         };
       } else if (i === 1) {
         obj[t] = (current: Dayjs) => {
-          const startTime = formScheam[timeKeys[0]];
+          const startTime = formScheam.value[timeKeys[0]];
 
           if (startTime) {
             return (current && current > dayjs().endOf('day')) || current < dayjs(startTime).endOf('day');
@@ -291,7 +295,7 @@
   };
 </script>
 <template>
-  <div class="min-h-screen bg-gray-100 dark:bg-gray-900 p-1 md:p-2 lg:p-3 flex flex-col gap-2 mt-1" ref="rootDiv">
+  <div class="min-h-screen bg-gray-100 dark:bg-gray-900 p-1 md:p-2 lg:p-3 flex flex-col gap-2 mt-1">
     <!-- 表单区域 -->
     <Card class="px-2 py-1 md:px-4 md:py-2">
       <div class="flex flex-col gap-1 md:gap-2 lg:gap-4">
@@ -350,7 +354,10 @@
             </div> -->
 
             <a-form-item noStyle>
-              <div class="flex items-center"> <a-button type="primary" html-type="submit">查询</a-button></div>
+              <div class="flex items-center gap-2">
+                <a-button type="primary" html-type="submit">查询</a-button>
+                <a-button @click="clear">清空</a-button></div
+              >
             </a-form-item>
           </a-form>
         </div>
