@@ -55,7 +55,7 @@
     { label: '宽松', value: 'large' },
   ] as const;
   const tableSize = ref<(typeof tableSizeList)[number]>(tableSizeList[0]);
-  const isPC = useMediaQuery('(min-width: 768px)');
+  const isPC = useMediaQuery('(min-width: 850px)');
   const report = ref<ReportType>(reports[0]);
   const selectStore = useSelectStore();
   // 表格的每条记录
@@ -316,14 +316,15 @@
           <Divider>条件设置</Divider>
           <a-form
             noStyle
-            class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-x-2 md:gap-x-4 lg:gap-x-6 gap-y-2"
+            class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-x-2 md:gap-x-3 lg:gap-x-4 gap-y-2"
             @submit="submit"
           >
             <a-form-item v-for="(item, i) in inputItems.filter((i) => i.name !== 'addresscode')" :key="i" :name="item.name" noStyle>
-              <div class="flex items-center">
-                <div class="w-30 md:w-26">{{ item.title }}:</div>
+              <div class="flex items-center overflow-x-auto">
+                <div class="flex-none">{{ item.title }}:</div>
 
                 <a-select
+                  class="flex-1"
                   v-if="selectStore.getSelectBykey(item.name)"
                   v-model:value="formScheam[item.name]"
                   allowClear
