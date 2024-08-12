@@ -135,7 +135,7 @@ export function getFormItems(reportId: string) {
 
 export const selects = {
   businessid: {
-    name: '业务类型',
+    name: '业务名称',
     path: 'getDmBusinessType',
   },
 

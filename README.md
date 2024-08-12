@@ -181,3 +181,8 @@ VITE_GLOB_DOMAIN_URL=http://jeecg-boot-gateway:9999
 
 - 超级管理员super_admin super_admin123
 - 管理员admin admin
+
+1. 调账补退统计
+
+- 业务类型应为类型名称
+- 缺少类型标志

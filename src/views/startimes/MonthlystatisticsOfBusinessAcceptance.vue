@@ -32,7 +32,7 @@
     {
       reportId: '978520871563771904',
       key: 'businessnamestr',
-      label: '业务类型',
+      label: '业务名称',
       tableNmae: 'utf8',
     },
   ];

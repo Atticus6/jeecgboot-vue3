@@ -14,13 +14,7 @@
     {
       reportId: '978510300768452608',
       key: 'payment_day',
-      label: '销售日期',
-      tableNmae: 'utf8',
-    },
-    {
-      reportId: '978532239838887936',
-      key: 'operitemenamestr',
-      label: '营业项目',
+      label: '统计日期',
       tableNmae: 'utf8',
     },
     {
@@ -29,6 +23,13 @@
       label: '营业项目类型',
       tableNmae: 'utf8',
     },
+    {
+      reportId: '978532239838887936',
+      key: 'operitemenamestr',
+      label: '营业项目',
+      tableNmae: 'utf8',
+    },
+
     {
       reportId: '978532258792947712',
       key: 'salechannelnamestr',
